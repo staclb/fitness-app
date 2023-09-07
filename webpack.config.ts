@@ -1,15 +1,15 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './client/index.tsx',
   mode: process.env.NODE_ENV,
   resolve: {
-    extensions: ['.jsx', '.js', '.tsx', '.ts'],
+    extensions: ['.jsx', '.js', '.tsx', '.ts']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: 'bundle.js'
   },
 
   module: {
@@ -20,42 +20,34 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'],
-          },
-        },
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
       },
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
-        use: ['ts-loader'],
+        use: ['ts-loader']
       },
       {
         test: /.(css|scss)$/,
         exclude: [/node_modules/],
-        use: ['style-loader', 'css-loader', 'postcss-loader'],
+        use: ['style-loader', 'css-loader', 'postcss-loader']
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
         use: [
           {
-            loader: 'file-loader',
-          },
-        ],
-      },
-    ],
+            loader: 'file-loader'
+          }
+        ]
+      }
+    ]
   },
   plugins: [
-    //removes all files under output.path and all unused assets after every successful rebuild
-    // new CleanWebpackPlugin(),
-    // we want our bundle.js file to be loaded into an HTMl file
     new HtmlWebpackPlugin({
-      //where to inject the bundle.js file
-      template: './client/index.html',
-    }),
-    // generates a manifest.json file
-    // new WebpackManifestPlugin({
-    //   fileName: 'manifest.json',
-    // }),
+      template: './client/index.html'
+    })
   ],
   devServer: {
     host: 'localhost',
@@ -64,16 +56,15 @@ module.exports = {
     liveReload: false,
     historyApiFallback: true,
     static: {
-      // what the public sees so they dont know the path
       publicPath: '/build',
-      directory: path.join(__dirname, './build'),
+      directory: path.join(__dirname, './build')
     },
     proxy: {
-      //TODO: change to route that you need
+      // TODO: change to route that you need
       '/api': {
         target: 'http://localhost:3000',
-        secure: false,
-      },
-    },
-  },
-};
+        secure: false
+      }
+    }
+  }
+}
