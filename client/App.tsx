@@ -1,6 +1,7 @@
 import React, { type ReactElement } from 'react'
 // import './style.css'
 
+// setup from docs
 function App (): ReactElement {
   return (
     // <div>
