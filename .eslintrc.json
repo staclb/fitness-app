@@ -49,8 +49,7 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "semi": ["error", "always"],
-    "prettier/prettier": "error"
-    // Add more rules as needed
+    "semi": ["error", "always"]
+    // "prettier/prettier": "error"
   }
 }
