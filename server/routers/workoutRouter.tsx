@@ -4,7 +4,7 @@ import workoutController from '../controllers/workoutController';
 
 const router = express.Router();
 
-router.post('./post', workoutController.postWorkout, (req: Request, res: Response, next: NextFunction) => {
+router.post('/post', workoutController.postWorkout, (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({message: 'success'});
 });
 
