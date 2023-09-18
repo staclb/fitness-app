@@ -5,7 +5,7 @@ const workoutController = {
   postWorkout: async (req: Request, res: Response, next: NextFunction) => {
     console.log('hi from wk contr');
     const { user_id, workout_date, exercise_name, sets, reps, weight } = req.body;
-
+    console.log(req.body);
     try {
       console.log(user_id, workout_date, exercise_name, sets, reps, weight);
       const text = `

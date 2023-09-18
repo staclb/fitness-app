@@ -20,7 +20,8 @@ const query = async (text: string, values: any[]) => {
     // console.log('process.env.PG_URI:', process.env.PG_URI);
 
     const result = await pool.query(text, values);
-    console.log('hi')
+    console.log('hi');
+    // console.log('text:', text);
     return result;
   } catch (error) {
     console.log('error:', error);

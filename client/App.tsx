@@ -1,11 +1,20 @@
 import React, { type ReactElement } from 'react';
 // import './style.css'
+import NavBar from './containers/NavBar';
+import { Routes, Route } from 'react-router-dom';
+import Workouts from './components/Workouts';
+import Progress from './components/Progress';
 
 // setup from docs
 function App (): ReactElement {
   return (
     <div>
-    App
+      <h1>App</h1>
+      <NavBar />
+      <Routes>
+        <Route path='/Workouts' element={<Workouts />}></Route>
+        <Route path='/Progress' element={<Progress />}></Route>
+      </Routes>
     </div>
     // <div className="w-full h-screen flex flex-cols text-center">
     //   <div className="w-1/8 bg-slate-200 h-full p-4 hidden md:flex flex-col">
