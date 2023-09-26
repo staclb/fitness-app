@@ -8,3 +8,7 @@ export interface ServerError {
 // export interface workoutController {
 //   postWorkout: RequestHandler
 // }
+
+export interface WorkoutModalProps {
+  closeModal: () => void
+}

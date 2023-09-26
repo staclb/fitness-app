@@ -18,6 +18,7 @@
   "author": "Stephen Acosta",
   "license": "ISC",
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@reduxjs/toolkit": "^1.9.5",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.3.1",
