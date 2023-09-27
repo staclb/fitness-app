@@ -8,7 +8,7 @@ import Progress from './components/Progress';
 // setup from docs
 function App (): ReactElement {
   return (
-    <div className='flex flex-col h-screen'>
+    <div className='flex flex-col h-screen bg-neutral-400'>
       <div className='flex-grow'>
         <Routes>
           <Route path='/Workouts' element={<Workouts />}></Route>

@@ -1,17 +1,17 @@
 import React from 'react';
 import { WorkoutModalProps } from '../../types/types';
 
-const WorkoutModal: React.FC<WorkoutModalProps> = ({ closeModal} ) => {
+const WorkoutModal: React.FC<WorkoutModalProps> = ({ closeWorkoutModal} ) => {
   return (
     <div>
       <div>
-        <button onClick={() => closeModal()}>Nevermind!</button>
+        <button onClick={() => closeWorkoutModal()}>Nevermind!</button>
       </div>
       <div>
         Content
       </div>
       <div>
-        <button onClick={() => closeModal()}>Good To Go!</button>
+        <button onClick={() => closeWorkoutModal()}>Good To Go!</button>
       </div>
     </div>
   );

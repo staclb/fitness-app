@@ -10,5 +10,5 @@ export interface ServerError {
 // }
 
 export interface WorkoutModalProps {
-  closeModal: () => void
+  closeWorkoutModal: () => void
 }
