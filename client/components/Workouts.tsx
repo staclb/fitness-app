@@ -18,7 +18,17 @@ const Workouts = () => {
   const [value, onChange] = useState<Value>(new Date());
   const [openWorkout, setOpenWorkout] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
+  const [workouts, setWorkouts] = useState([]);
 
+  const getWorkouts = async () => {
+    try {
+      const url = '/api/workout/get';
+      const res = await fetch (url);
+      const data = await res.json();
+    } catch (error) {
+      console.log('Error fetching logs:', error);
+    }
+  }
 
   const openWorkoutModal = () => {
     setOpenWorkout(true);
@@ -29,7 +39,7 @@ const Workouts = () => {
   };
 
   const openCalendarModal = () => {
-    console.log('open calendar')
+    console.log('open calendar');
     setOpenCalendar(true);
   };
 
@@ -41,15 +51,19 @@ const Workouts = () => {
   const currentDate = (date: Date) => {
     // const date = new Date();
     console.log(date);
+    const timestamp = new Date().getTime();
+    console.log('yo1', timestamp);
+    console.log('yo2', new Date(timestamp));
     const todaysDate = date.getMonth() + 1 + '/' + date.getDate();
     return todaysDate;
-  }
+  };
 
   return (
     <div className='flex flex-col'>
       <button className="bg-blue-500 text-white font-bold " onClick={openCalendarModal}>
         {currentDate(selectedDate)}
       </button>
+      {workouts}
       <button className="bg-green-500 text-white font-bold py-2 px-4 rounded" onClick={openWorkoutModal}>
         +
       </button>
@@ -65,4 +79,4 @@ const Workouts = () => {
 export default Workouts;
 
 // onDateClick={closeCalendarModal}
-// showWeekNumbers value={value} 
+// showWeekNumbers value={value}
