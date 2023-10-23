@@ -1,5 +1,5 @@
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+import path from 'path';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: './client/index.tsx',
@@ -31,7 +31,7 @@ module.exports = {
       },
       {
         test: /.(css|scss)$/,
-        exclude: [/node_modules/],
+        // exclude: [/node_modules/],
         use: ['style-loader', 'css-loader', 'postcss-loader']
       },
       {
@@ -67,4 +67,4 @@ module.exports = {
       }
     }
   }
-}
+};
