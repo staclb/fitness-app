@@ -12,3 +12,7 @@ export interface ServerError {
 export interface WorkoutModalProps {
   closeWorkoutModal: () => void
 }
+
+export interface Workouts {
+  id: number;
+}

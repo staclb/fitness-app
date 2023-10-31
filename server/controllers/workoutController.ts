@@ -48,15 +48,15 @@ const workoutController = {
     }
   },
   getWorkoutsByDay: async (req: Request, res: Response, next: NextFunction) => {
-    console.log('hi from wk contr');
-    const { unixtime, user_id, workout_date, exercise_name, sets, reps, weight } = req.body;
-    // console.log(req.body);
+    const { unixtime, user_id, workout_date, exercise_name, sets, reps, weight } = req.query;
     try {
       // user selects a day => change to unix time, select all exercises that fall under that day by unix  time in table
       // attach the exercise_name to the sets that have a matching exercise_id; each set has a reps and weight
       // save that to res.locals
       // later will add to search by user_id + unixtime
       // need unix time from start and end of the day that FE sends
+      console.log('unixtime', unixtime)
+      console.log('user_id', user_id)
       const workoutDate = new Date(unixtime);
 
       const startOfDay = new Date(workoutDate);
@@ -67,10 +67,10 @@ const workoutController = {
       endOfDay.setHours(23, 59, 59, 999);
       const endOfDayUnixtime = endOfDay.getTime();
 
-      const query = `
-        SELECT exercises.excercise_name, sets.reps, sets.weight
+      const exerciseQuery = `
+        SELECT exercises.exercise_name, sets.reps, sets.weight
         FROM exercises
-        JOIN sets ON exercises.exercises.id = sets.exercises_id
+        JOIN sets ON exercises.exercise_id = sets.exercise_id
         WHERE exercises.user_id = $1
         AND exercises.date_unixtime >= $2
         AND exercises.date_unixtime <= $3
@@ -78,10 +78,21 @@ const workoutController = {
 
       const queryValues = [user_id, startOfDayUnixtime, endOfDayUnixtime];
 
-      const result = await query(query, queryValues);
+      const result = await query(exerciseQuery, queryValues);
+      const data = result.rows;
+      // go through arr of wk objects
+      // assocaite each exercise name with sets => reps +weight
+      const parsedData = data.reduce((set, item) => {
+        if (!set[item.exercise_name]) {
+          set[item.exercise_name] = [];
+        }
+        set[item.exercise_name].push({ reps: item.reps, weight: item.weight });
 
-      console.log('result', result);
-
+        return set;
+      }, {});
+      console.log('parsedData', parsedData);
+      console.log('changes')
+      // res.locals.workouts = result;
       return next();
     } catch (error) {
       return next({

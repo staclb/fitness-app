@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
+import { Workouts } from '../../types/types';
 
 // import './Sample.css';
 
@@ -20,15 +21,23 @@ const Workouts = () => {
   const [openCalendar, setOpenCalendar] = useState(false);
   const [workouts, setWorkouts] = useState([]);
 
-  const getWorkouts = async () => {
-    try {
-      const url = '/api/workout/get';
-      const res = await fetch (url);
-      const data = await res.json();
-    } catch (error) {
-      console.log('Error fetching logs:', error);
-    }
-  }
+  // const fetchWorkoutsByDay = async (unixtime: number) => {
+  //   try {
+  //     const user_id = 1;
+
+  //     console.log('UX', unixtime)
+  //     console.log('id', user_id)
+  //     const responce = await fetch(`/api/workout/getByDay?unixtime=${unixtime}&user_id=${user_id}`);
+
+  //     const data: Workouts[] = await responce.json();
+
+  //     console.log('data', data);
+
+  //     setWorkouts(data);
+  //   } catch (error) {
+  //     console.log('Error fetching workouts by day');
+  //   }
+  // };
 
   const openWorkoutModal = () => {
     setOpenWorkout(true);
@@ -39,7 +48,7 @@ const Workouts = () => {
   };
 
   const openCalendarModal = () => {
-    console.log('open calendar');
+    // console.log('open calendar');
     setOpenCalendar(true);
   };
 
@@ -49,25 +58,29 @@ const Workouts = () => {
   };
 
   const currentDate = (date: Date) => {
-    // const date = new Date();
-    console.log(date);
     const timestamp = new Date().getTime();
     console.log('yo1', timestamp);
-    console.log('yo2', new Date(timestamp));
     const todaysDate = date.getMonth() + 1 + '/' + date.getDate();
     return todaysDate;
   };
+
+  useEffect(() => {
+    const unixtime = selectedDate.getTime();
+    fetchWorkoutsByDay(unixtime);
+  }, [selectedDate]);
 
   return (
     <div className='flex flex-col'>
       <button className="bg-blue-500 text-white font-bold " onClick={openCalendarModal}>
         {currentDate(selectedDate)}
       </button>
-      {workouts}
+      {/* {workouts.map((workout) => (
+        <div key={workout.id} />
+      ))} */}
+      {/* {workouts} */}
       <button className="bg-green-500 text-white font-bold py-2 px-4 rounded" onClick={openWorkoutModal}>
         +
       </button>
-
       {openCalendar && <Calendar onChange={onChange} defaultValue={selectedDate} onClickDay={closeCalendarModal}/>}
 
       {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal}/>}
