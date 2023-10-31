@@ -8,7 +8,7 @@ router.post('/post', workoutController.postWorkout, (req: Request, res: Response
   res.status(200).json({message: 'success'});
 });
 
-router.get('/get', workoutController.getWorkout, (req: Request, res: Response, next: NextFunction) => {
+router.get('/getByDay', workoutController.getWorkoutsByDay, (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json(res.locals.workouts);
 });
 
