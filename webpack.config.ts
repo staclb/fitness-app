@@ -52,8 +52,8 @@ module.exports = {
   devServer: {
     host: 'localhost',
     port: 8080,
-    hot: false,
-    liveReload: false,
+    hot: true,
+    liveReload: true,
     historyApiFallback: true,
     static: {
       publicPath: '/build',
