@@ -3,7 +3,7 @@ import { query } from '../config/pgSetup';
 
 const workoutController = {
   postWorkout: async (req: Request, res: Response, next: NextFunction) => {
-    console.log('hi from wk contr');
+    // console.log('hi from wk contr');
     // console.log('hi1')
     const { user_id, workout_date, exercise_name, reps, weight, workout_id } = req.body;
     // console.log(req.body);
@@ -29,7 +29,7 @@ const workoutController = {
       // console.log('hi')
       // console.log(typeof exercise_name)
       const exerciseValues = [user_id, exercise_name, workout_date, workout_id];
-      console.log(exerciseValues)
+      // console.log(exerciseValues)
       const exerciseResult = await query(exerciseQuery, exerciseValues);
 
       const exerciseId = exerciseResult.rows[0].exercise_id;
@@ -48,6 +48,7 @@ const workoutController = {
     }
   },
   getWorkoutsByDay: async (req: Request, res: Response, next: NextFunction) => {
+    // console.log('hi from getWorkoutsByDay')
     const { unixtime, user_id, workout_date, exercise_name, sets, reps, weight } = req.query;
     try {
       // user selects a day => change to unix time, select all exercises that fall under that day by unix  time in table
@@ -55,10 +56,15 @@ const workoutController = {
       // save that to res.locals
       // later will add to search by user_id + unixtime
       // need unix time from start and end of the day that FE sends
-      console.log('unixtime', unixtime)
-      console.log('user_id', user_id)
-      const workoutDate = new Date(unixtime);
-
+      // console.log('hi from wk by day');
+      // console.log('unixtime', unixtime);
+      // console.log('user_id', user_id);
+      // date obj needs an explicit type => number
+      const unixTimeNumber = Number(unixtime);
+      // console.log('unixTimeNumber', typeof unixTimeNumber);
+      // const workoutDate = typeof unixtime === 'number' ? new Date(unixTimeNumber) : Date.now();
+      const workoutDate = new Date(unixTimeNumber)
+      // console.log('workoutDate', workoutDate)
       const startOfDay = new Date(workoutDate);
       startOfDay.setHours(0, 0, 0, 0);
       const startOfDayUnixtime = startOfDay.getTime();
@@ -75,24 +81,41 @@ const workoutController = {
         AND exercises.date_unixtime >= $2
         AND exercises.date_unixtime <= $3
       `;
-
+      
       const queryValues = [user_id, startOfDayUnixtime, endOfDayUnixtime];
+      // console.log('queryValues', queryValues)
 
       const result = await query(exerciseQuery, queryValues);
       const data = result.rows;
+      // console.log('data from query', data)
       // go through arr of wk objects
       // assocaite each exercise name with sets => reps +weight
-      const parsedData = data.reduce((set, item) => {
-        if (!set[item.exercise_name]) {
-          set[item.exercise_name] = [];
-        }
-        set[item.exercise_name].push({ reps: item.reps, weight: item.weight });
+      // const parsedData = data.reduce((set, item) => {
+      //   // console.log('set[item.exercise_name]', set[item.exercise_name]);
+      //   if (!set[item.exercise_name]) {
+      //     set[item.exercise_name] = [];
+      //   }
+      //   set[item.exercise_name].push({ reps: item.reps, weight: item.weight });
 
-        return set;
-      }, {});
-      console.log('parsedData', parsedData);
-      console.log('changes')
-      // res.locals.workouts = result;
+      //   return set;
+      // }, []);
+
+      // Process the rawData into the desired format.
+      const parsedData: { [key: string]: { reps: number; weight: number }[] } = {};
+  
+      data.forEach((row) => {
+        if (!parsedData[row.exercise_name]) {
+          parsedData[row.exercise_name] = [];
+        }
+        parsedData[row.exercise_name].push({
+          reps: row.reps,
+          weight: parseFloat(row.weight) // Parse the weight as a number
+        });
+      });
+      // console.log('parsedData', parsedData);
+      // console.log('changes')
+      res.locals.workouts = parsedData;
+      // console.log('res.locals.workouts', res.locals.workouts);
       return next();
     } catch (error) {
       return next({

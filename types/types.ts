@@ -14,5 +14,7 @@ export interface WorkoutModalProps {
 }
 
 export interface Workouts {
-  id: number;
+  // id: number;
+  reps: number;
+  weight: number;
 }

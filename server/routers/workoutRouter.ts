@@ -9,6 +9,7 @@ router.post('/post', workoutController.postWorkout, (req: Request, res: Response
 });
 
 router.get('/getByDay', workoutController.getWorkoutsByDay, (req: Request, res: Response, next: NextFunction) => {
+  // console.log('res.locals.workouts', res.locals.workouts);
   res.status(200).json(res.locals.workouts);
 });
 
