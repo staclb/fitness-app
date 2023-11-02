@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-import { Workouts } from '../../types/types';
+// import { Workouts } from '../../types/types';
 import { v4 as uuidv4 } from 'uuid';
 
 // import './Sample.css';
@@ -53,6 +53,15 @@ const Workouts = () => {
     setSelectedDate(date);
     setOpenCalendar(false);
   };
+  // const toggleWorkoutModal = (open: boolean) => {
+  //   setOpenWorkout(open);
+  // };
+  
+  // const toggleCalendarModal = (open: boolean, date?: Date) => {
+  //   if (date) setSelectedDate(date);
+  //   setOpenCalendar(open);
+  // };
+  
 
   const currentDate = (date: Date) => {
     const timestamp = new Date().getTime();
@@ -116,6 +125,7 @@ const Workouts = () => {
       {openCalendar && <Calendar onChange={onChange} defaultValue={selectedDate} onClickDay={closeCalendarModal}/>}
 
       {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal}/>}
+
     </div>
   );
 };
