@@ -2,39 +2,21 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-// import { Workouts } from '../../types/types';
 import { v4 as uuidv4 } from 'uuid';
+import { fetchWorkoutsByDay } from '../api/workoutData';
 
-// import './Sample.css';
 
 type ValuePiece = Date | null;
-
 type Value = ValuePiece | [ValuePiece, ValuePiece];
-
 // type date = string | null;
 
 const Workouts = () => {
-  // console.log('hi from workouts');
-
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [value, onChange] = useState<Value>(new Date());
   const [openWorkout, setOpenWorkout] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
   const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number }> }>({});
   const [selectedExercise, setSelectedExercise] = useState('');
-
-
-  const fetchWorkoutsByDay = async (unixtime: number) => {
-    try {
-      const user_id = 1;
-
-      const response = await fetch(`/api/workout/getByDay?unixtime=${unixtime}&user_id=${user_id}`);
-      const data = await response.json();
-      setWorkouts(data);
-    } catch (error) {
-      console.log('Error fetching workouts by day');
-    }
-  };
 
   const openWorkoutModal = () => {
     setOpenWorkout(true);
@@ -45,7 +27,6 @@ const Workouts = () => {
   };
 
   const openCalendarModal = () => {
-    // console.log('open calendar');
     setOpenCalendar(true);
   };
 
@@ -53,15 +34,6 @@ const Workouts = () => {
     setSelectedDate(date);
     setOpenCalendar(false);
   };
-  // const toggleWorkoutModal = (open: boolean) => {
-  //   setOpenWorkout(open);
-  // };
-  
-  // const toggleCalendarModal = (open: boolean, date?: Date) => {
-  //   if (date) setSelectedDate(date);
-  //   setOpenCalendar(open);
-  // };
-  
 
   const currentDate = (date: Date) => {
     const timestamp = new Date().getTime();
@@ -77,9 +49,19 @@ const Workouts = () => {
     }
   };
 
+  // for fetching workout data
   useEffect(() => {
-    const unixtime = selectedDate.getTime();
-    fetchWorkoutsByDay(unixtime);
+    const fetchData = async () => {
+      try {
+        const unixtime = selectedDate.getTime();
+        const user_id = 1;
+        const data = await fetchWorkoutsByDay(unixtime, user_id);
+        setWorkouts(data);
+      } catch (error) {
+        console.log('Error fetching workouts by day data');
+      }
+    };
+    fetchData();
   }, [selectedDate]);
 
   return (
@@ -87,21 +69,6 @@ const Workouts = () => {
       <button className="bg-blue-500 text-white font-bold " onClick={openCalendarModal}>
         {currentDate(selectedDate)}
       </button>
-      {/* <div>
-        <div>
-          {Object.keys(workouts).map((exercise: string) => (
-            <div key={uuidv4()}>
-              <h2>{exercise}</h2>
-              {workouts[exercise].map((workout) => (
-                <div key={uuidv4()}>
-                  <p>Reps: {workout.reps}</p>
-                  <p>Weight: {workout.weight}</p>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div> */}
       <div>
         {Object.keys(workouts).map((exercise: string) => (
           <div key={uuidv4()}>
@@ -124,13 +91,9 @@ const Workouts = () => {
       </button>
       {openCalendar && <Calendar onChange={onChange} defaultValue={selectedDate} onClickDay={closeCalendarModal}/>}
 
-      {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal}/>}
+      {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>}
 
     </div>
   );
 };
-
 export default Workouts;
-
-// onDateClick={closeCalendarModal}
-// showWeekNumbers value={value}
