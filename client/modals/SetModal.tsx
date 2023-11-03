@@ -1,22 +1,22 @@
 import React from 'react';
-import { WorkoutModalProps } from '../../types/types';
+import { SetModalProps } from '../../types/types';
 import { postWorkout, fetchWorkoutsByDay } from '../api/workoutData';
 
-const WorkoutModal: React.FC<WorkoutModalProps> = ({ closeWorkoutModal, selectedDate, setWorkouts } ) => {
+const SetModal: React.FC<SetModalProps> = ({ toggleSetModal, selectedDate, setWorkouts, selectedExercise }) => {
 
-  // type for event set to any - need to look into it
-  const handlePostWorkout = async (event: any) => {
+  const handlePostSet = async (event: any) => {
     event.preventDefault();
-
+    console.log('hi from handlePostSet');
+    console.log('exercise',selectedExercise);
     const user_id = 1;
     const unixtime = selectedDate.getTime();
 
     const workoutData = {
-      name: event.target.name.value,
       weight: Number(event.target.weight.value),
       reps: Number(event.target.reps.value),
       user_id: user_id,
-      unixtime: unixtime
+      unixtime: unixtime,
+      name: selectedExercise
     };
 
     try {
@@ -24,22 +24,15 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ closeWorkoutModal, selected
       // need to do seomthing with data after => update workouts => might need context
       const updatedWorkouts = await fetchWorkoutsByDay(unixtime, user_id);
       setWorkouts(updatedWorkouts);
-      closeWorkoutModal();
+      toggleSetModal(selectedExercise);
     } catch (error) {
       console.log('Error posting workout data');
     }
   };
   return (
     <div>
-      <div>
-        <button onClick={() => closeWorkoutModal()}>X</button>
-      </div>
       <div className='flex flex-col'>
-        <form onSubmit={handlePostWorkout}>
-          <label>
-            Workout:
-            <input type="text" name="name" />
-          </label>
+        <form onSubmit={handlePostSet}>
           <label>
             Weight:
             <input type="number" name="weight" />
@@ -52,7 +45,8 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ closeWorkoutModal, selected
         </form>
       </div>
     </div>
+
   );
 };
 
-export default WorkoutModal;
+export default SetModal;

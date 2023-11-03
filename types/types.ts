@@ -11,6 +11,16 @@ export interface ServerError {
 
 export interface WorkoutModalProps {
   closeWorkoutModal: () => void
+  selectedDate: Date;
+  // using context can help avoid this line below
+  setWorkouts: React.Dispatch<React.SetStateAction<{ [exercise: string]: Array<{ reps: number; weight: number }> }>>;
+}
+
+export interface SetModalProps {
+  toggleSetModal: (exercise: string) => void
+  selectedDate: Date;
+  setWorkouts: React.Dispatch<React.SetStateAction<{ [exercise: string]: Array<{ reps: number; weight: number }> }>>;
+  selectedExercise: string
 }
 
 export interface Workouts {
