@@ -4,6 +4,7 @@ import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchWorkoutsByDay } from '../api/workoutData';
+import SetModal from '../modals/SetModal';
 
 
 type ValuePiece = Date | null;
@@ -17,6 +18,7 @@ const Workouts = () => {
   const [openCalendar, setOpenCalendar] = useState(false);
   const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number }> }>({});
   const [selectedExercise, setSelectedExercise] = useState('');
+  const [openSetModal, setOpenSetModal] = useState(false);
 
   const openWorkoutModal = () => {
     setOpenWorkout(true);
@@ -35,8 +37,16 @@ const Workouts = () => {
     setOpenCalendar(false);
   };
 
+  const toggleSetModal = () => {
+    if (openSetModal) {
+      setOpenSetModal(false);
+    } else {
+      setOpenSetModal(true);
+    }
+  };
+
   const currentDate = (date: Date) => {
-    const timestamp = new Date().getTime();
+    // const timestamp = new Date().getTime();
     const todaysDate = date.getMonth() + 1 + '/' + date.getDate();
     return todaysDate;
   };
@@ -73,6 +83,7 @@ const Workouts = () => {
         {Object.keys(workouts).map((exercise: string) => (
           <div key={uuidv4()}>
             <h2 onClick={() => handleExerciseClick(exercise)}>{exercise}</h2>
+            <button onClick={() => toggleSetModal()}>+</button>
             {selectedExercise === exercise && (
               <div>
                 {workouts[exercise].map((workout) => (
@@ -93,6 +104,7 @@ const Workouts = () => {
 
       {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>}
 
+      {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>}
     </div>
   );
 };
