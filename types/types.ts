@@ -17,9 +17,10 @@ export interface WorkoutModalProps {
 }
 
 export interface SetModalProps {
-  toggleSetModal: () => void
+  toggleSetModal: (exercise: string) => void
   selectedDate: Date;
   setWorkouts: React.Dispatch<React.SetStateAction<{ [exercise: string]: Array<{ reps: number; weight: number }> }>>;
+  selectedExercise: string
 }
 
 export interface Workouts {

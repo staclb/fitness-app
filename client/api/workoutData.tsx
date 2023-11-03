@@ -8,10 +8,10 @@ export const fetchWorkoutsByDay = async (unixtime: number, user_id: number) => {
   }
 };
 
-// fix data and typing
+// fix data and typing => any
 export const postWorkout = async (data: any) => {
   try {
-    console.log('data', data)
+    console.log('data', data);
     const response = await fetch('/api/workout/post', {
       method: 'POST',
       headers: {
@@ -27,7 +27,7 @@ export const postWorkout = async (data: any) => {
 
 // export const postSet = async (data: any) => {
 //   try {
-//     console.log('data', data)
+//     console.log('data', data);
 //     const response = await fetch('/api/workout/post', {
 //       method: 'POST',
 //       headers: {

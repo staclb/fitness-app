@@ -12,20 +12,50 @@ const workoutController = {
 
       // need to add logic that checks if an exercise exists already for a user on that day
       // if so then just add a set to the set table for that exercise_id
-      const insertExerciseQuery = `
-        INSERT into exercises (user_id, exercise_name, date_unixtime)
-        VALUES ($1, $2, $3)
-        RETURNING exercise_id;
+
+      // add condition if name is provied from FE and doesnt exist, then create exercise + set entry
+      // otherwise find the exercie_id and add a set
+
+      // rep code from postWorkout function => might need to import from anotehr file
+      const workoutDate = new Date(unixtime);
+
+      const startOfDay = new Date(workoutDate);
+      startOfDay.setHours(0, 0, 0, 0);
+      const startOfDayUnixtime = startOfDay.getTime();
+
+      const endOfDay = new Date(workoutDate);
+      endOfDay.setHours(23, 59, 59, 999);
+      const endOfDayUnixtime = endOfDay.getTime();
+      //
+      const checkExerciseQuery = `
+        SELECT exercise_id
+        FROM exercises
+        WHERE user_id = $1
+          AND exercise_name = $2
+          AND date_unixtime >= $3
+          AND date_unixtime <= $4
       `;
-      const exerciseValues = [user_id, name, unixtime];
-      const result = await query(insertExerciseQuery, exerciseValues);
-      const exercise_id = result.rows[0].exercise_id;
+      const queryValues = [user_id, name, startOfDayUnixtime, endOfDayUnixtime];
+      let result = await query(checkExerciseQuery, queryValues);
+
+      if (result.rows.length > 0) {
+        result = result.rows[0].exercise_id;
+      } else {
+        const insertExerciseQuery = `
+          INSERT into exercises (user_id, exercise_name, date_unixtime)
+          VALUES ($1, $2, $3)
+          RETURNING exercise_id;
+        `;
+        const exerciseValues = [user_id, name, unixtime];
+        const insertWorkoutResult = await query(insertExerciseQuery, exerciseValues)
+        result = insertWorkoutResult.rows[0].exercise_id;
+      }
 
       const insertSetQuery = `
-        INSERT into sets (exercise_id, reps, weight)
-        VALUES ($1, $2, $3)
-      `;
-      const setValues = [exercise_id, reps, weight];
+          INSERT into sets (exercise_id, reps, weight)
+          VALUES ($1, $2, $3)
+        `;
+      const setValues = [result, reps, weight];
       await query(insertSetQuery, setValues);
 
       return next();
@@ -62,8 +92,8 @@ const workoutController = {
         FROM exercises
         JOIN sets ON exercises.exercise_id = sets.exercise_id
         WHERE exercises.user_id = $1
-        AND exercises.date_unixtime >= $2
-        AND exercises.date_unixtime <= $3
+          AND exercises.date_unixtime >= $2
+          AND exercises.date_unixtime <= $3
       `;
 
       const queryValues = [user_id, startOfDayUnixtime, endOfDayUnixtime];
@@ -72,7 +102,7 @@ const workoutController = {
       // go through arr of wk objects
       // assocaite each exercise name with sets => reps +weight
       // Process the rawData into the desired format.
-      const parsedData: { [key: string]: { reps: number; weight: number }[] } = {};
+      const parsedData: { [key: string]: { reps: number; weight: number } [] } = {};
 
       data.forEach((row) => {
         if (!parsedData[row.exercise_name]) {

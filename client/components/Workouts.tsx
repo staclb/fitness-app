@@ -37,7 +37,9 @@ const Workouts = () => {
     setOpenCalendar(false);
   };
 
-  const toggleSetModal = () => {
+  const toggleSetModal = (exercise: string) => {
+    // needed to pass down exercise name to child comp
+    setSelectedExercise(exercise);
     if (openSetModal) {
       setOpenSetModal(false);
     } else {
@@ -83,7 +85,7 @@ const Workouts = () => {
         {Object.keys(workouts).map((exercise: string) => (
           <div key={uuidv4()}>
             <h2 onClick={() => handleExerciseClick(exercise)}>{exercise}</h2>
-            <button onClick={() => toggleSetModal()}>+</button>
+            <button onClick={() => toggleSetModal(exercise)}>+</button>
             {selectedExercise === exercise && (
               <div>
                 {workouts[exercise].map((workout) => (
@@ -104,7 +106,7 @@ const Workouts = () => {
 
       {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>}
 
-      {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>}
+      {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} setWorkouts={setWorkouts} selectedExercise={selectedExercise}/>}
     </div>
   );
 };
