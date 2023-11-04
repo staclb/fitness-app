@@ -23,20 +23,34 @@ export const postWorkout = async (data: any) => {
   } catch (error) {
     console.log('Error posting workout');
   }
-}
+};
 
-// export const postSet = async (data: any) => {
-//   try {
-//     console.log('data', data);
-//     const response = await fetch('/api/workout/post', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(data)
-//     });
-//     return response;
-//   } catch (error) {
-//     console.log('Error posting workout');
-//   }
-// }
+export const deleteWorkout = async (exercise_id: number) => {
+  try {
+    // console.log('exercise_id', exercise_id);
+    const response = await fetch(`/api/workout/delete/${exercise_id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log('Error posting workout');
+  }
+};
+
+export const deleteSet = async (set_id: number) => {
+  try {
+    console.log('exercise_id', set_id);
+    const response = await fetch(`/api/workout/deleteSet${set_id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.log('Error posting workout');
+  }
+};

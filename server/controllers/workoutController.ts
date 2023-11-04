@@ -47,7 +47,7 @@ const workoutController = {
           RETURNING exercise_id;
         `;
         const exerciseValues = [user_id, name, unixtime];
-        const insertWorkoutResult = await query(insertExerciseQuery, exerciseValues)
+        const insertWorkoutResult = await query(insertExerciseQuery, exerciseValues);
         result = insertWorkoutResult.rows[0].exercise_id;
       }
 
@@ -88,7 +88,7 @@ const workoutController = {
       const endOfDayUnixtime = endOfDay.getTime();
 
       const exerciseQuery = `
-        SELECT exercises.exercise_name, sets.reps, sets.weight
+        SELECT exercises.exercise_id, exercises.exercise_name, sets.set_id, sets.reps, sets.weight
         FROM exercises
         JOIN sets ON exercises.exercise_id = sets.exercise_id
         WHERE exercises.user_id = $1
@@ -98,31 +98,95 @@ const workoutController = {
 
       const queryValues = [user_id, startOfDayUnixtime, endOfDayUnixtime];
       const result = await query(exerciseQuery, queryValues);
+      // console.log(result.rows)
       const data = result.rows;
       // go through arr of wk objects
       // assocaite each exercise name with sets => reps +weight
       // Process the rawData into the desired format.
-      const parsedData: { [key: string]: { reps: number; weight: number } [] } = {};
+      const parsedData: { [key: string]: { exercise_id: number; set_id: number; reps: number; weight: number } [] } = {};
 
+      // added set and workout id to data for frontend => delete/update functionality
       data.forEach((row) => {
         if (!parsedData[row.exercise_name]) {
           parsedData[row.exercise_name] = [];
         }
         parsedData[row.exercise_name].push({
+          exercise_id: row.exercise_id,
+          set_id: row.set_id,
           reps: row.reps,
-          weight: parseFloat(row.weight) // Parse the weight as a number
+          weight: Number(row.weight) // Parse the weight as a number
         });
       });
+      // console.log('parsedData', parsedData)
       res.locals.workouts = parsedData;
       return next();
     } catch (error) {
       return next({
-        log: `Error in workoutController.postWorkout, ${error}`,
+        log: `Error in workoutController.getWorkoutsByDay, ${error}`,
         status: 400,
         message: { err: 'An error occurred' }
       });
     }
   },
+  deleteWorkout: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { exerciseId } = req.params;
+      // first check if the entry in the exercises table for the exercise id has entries in the sets table
+      // if it does then delete all sets table entries for that id
+      // if not, or after deleting all sets table entries then delete the exercise table entry under the id
+      const setsQuery = `
+        SELECT * 
+        FROM sets
+        WHERE exercise_id = $1
+      `;
+      // query function requires the values to be in an array
+      const setQueryValues = [exerciseId];
+      const { rows } = await query(setsQuery, setQueryValues);
+      console.log('result', rows);
+
+      if (rows.length > 0) {
+        const deleteSetsQuery = `
+          DELETE FROM sets
+          WHERE exercise_id = $1
+        `;
+        await query(deleteSetsQuery, setQueryValues);
+      }
+
+      const deleteExerciseQuery = `
+        DELETE FROM exercises
+        WHERE exercise_id = $1
+      `;
+      await query(deleteExerciseQuery, setQueryValues);
+
+      return next();
+    } catch (error) {
+      return next({
+        log: `Error in workoutController.deleteWorkout, ${error}`,
+        status: 400,
+        message: { err: 'An error occurred' }
+      });
+    }
+  },
+  deleteSet: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { setId } = req.params;
+      console.log(setId)
+      const deleteSetQuery = `
+        DELETE FROM sets
+        WHERE set_id = $1
+      `;
+      const setQueryValues = [setId];
+      await query(deleteSetQuery, setQueryValues);
+
+      return next();
+    } catch (error) {
+      return next({
+        log: `Error in workoutController.deleteSet, ${error}`,
+        status: 400,
+        message: { err: 'An error occurred' }
+      });
+    }
+  }
 };
 
 export default workoutController;
