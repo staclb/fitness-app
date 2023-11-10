@@ -7,7 +7,8 @@ const pool = new Pool({
 });
 
 
-// fix any types for params and callback
+// fix any types for params and callback => currently could contain strings and numbers
+// perhaps making it require only strings
 const query = async (text: string, values: any[]) => {
   try {
     const result = await pool.query(text, values);

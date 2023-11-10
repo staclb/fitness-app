@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-import { v4 as uuidv4 } from 'uuid';
 import { fetchWorkoutsByDay } from '../api/workoutData';
 import SetModal from '../modals/SetModal';
+import { deleteWorkout, deleteSet } from '../api/workoutData';
+import { useWorkoutStore } from '../zustand';
 
 
 type ValuePiece = Date | null;
@@ -16,9 +17,11 @@ const Workouts = () => {
   const [value, onChange] = useState<Value>(new Date());
   const [openWorkout, setOpenWorkout] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
-  const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number }> }>({});
+  // const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>({});
   const [selectedExercise, setSelectedExercise] = useState('');
   const [openSetModal, setOpenSetModal] = useState(false);
+
+  const { workouts, refreshWorkouts } = useWorkoutStore();
 
   const openWorkoutModal = () => {
     setOpenWorkout(true);
@@ -40,6 +43,7 @@ const Workouts = () => {
   const toggleSetModal = (exercise: string) => {
     // needed to pass down exercise name to child comp
     setSelectedExercise(exercise);
+    // try setOpenSetModal(!xxx); =? bang operator, the ntry with otehr modal fucntions
     if (openSetModal) {
       setOpenSetModal(false);
     } else {
@@ -61,6 +65,29 @@ const Workouts = () => {
     }
   };
 
+  //  have to have this functon because the hooks cannot be used in the api layer
+  const handleDeleteWorkout = async (exercise_id: number) => {
+    // change later when adding user auth
+    const user_id = 1;
+    const unixtime = selectedDate.getTime();
+    console.log(unixtime);
+    const deleted = await deleteWorkout(exercise_id);
+    if (deleted) {
+      refreshWorkouts(unixtime, user_id);
+    }
+  };
+  
+  const handleDeleteSet = async (exercise_id: number) => {
+    // change later when adding user auth
+    const user_id = 1;
+    const unixtime = selectedDate.getTime();
+    console.log(unixtime);
+    const deleted = await deleteSet(exercise_id);
+    if (deleted) {
+      refreshWorkouts(unixtime, user_id);
+    }
+  };
+
   // for fetching workout data
   useEffect(() => {
     const fetchData = async () => {
@@ -68,13 +95,13 @@ const Workouts = () => {
         const unixtime = selectedDate.getTime();
         const user_id = 1;
         const data = await fetchWorkoutsByDay(unixtime, user_id);
-        setWorkouts(data);
+        await refreshWorkouts(unixtime, user_id);
       } catch (error) {
         console.log('Error fetching workouts by day data');
       }
     };
     fetchData();
-  }, [selectedDate]);
+  }, [selectedDate, refreshWorkouts]);
 
   return (
     <div className='flex flex-col'>
@@ -83,15 +110,17 @@ const Workouts = () => {
       </button>
       <div>
         {Object.keys(workouts).map((exercise: string) => (
-          <div key={uuidv4()}>
+          <div key={exercise}>
             <h2 onClick={() => handleExerciseClick(exercise)}>{exercise}</h2>
-            <button onClick={() => toggleSetModal(exercise)}>+</button>
+            <button onClick={() => toggleSetModal(exercise)} className='text-[40px] px-8'>+</button>
+            <button onClick={() => handleDeleteWorkout(workouts[exercise][0].exercise_id)} className='text-[40px]'>-</button>
             {selectedExercise === exercise && (
               <div>
                 {workouts[exercise].map((workout) => (
-                  <div key={uuidv4()}>
-                    <p>Reps: {workout.reps}</p>
+                  <div key={workout.set_id} className='flex'>
+                    <p className='px-8'>Reps: {workout.reps}</p>
                     <p>Weight: {workout.weight}</p>
+                    <button onClick={() => handleDeleteSet(workout.set_id)} className='text-[40px]'>-</button>
                   </div>
                 ))}
               </div>
@@ -104,9 +133,9 @@ const Workouts = () => {
       </button>
       {openCalendar && <Calendar onChange={onChange} defaultValue={selectedDate} onClickDay={closeCalendarModal}/>}
 
-      {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>}
+      {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate}/>}
 
-      {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} setWorkouts={setWorkouts} selectedExercise={selectedExercise}/>}
+      {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} selectedExercise={selectedExercise}/>}
     </div>
   );
 };
