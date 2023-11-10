@@ -21,8 +21,5 @@ router.delete('/delete/:exerciseId', workoutController.deleteWorkout, (req: Requ
   res.status(200).json({message: 'success'});
 });
 
-// router.delete('/deleteSet/:setId', workoutController.deleteSet, (req: Request, res: Response, next: NextFunction) => {
-//   res.status(200).json({message: 'success'});
-// });
 
 export default router;

@@ -7,8 +7,6 @@ const SetModal: React.FC<SetModalProps> = ({ toggleSetModal, selectedDate, selec
   const { refreshWorkouts } = useWorkoutStore();
   const handlePostSet = async (event: any) => {
     event.preventDefault();
-    // console.log('hi from handlePostSet');
-    // console.log('exercise',selectedExercise);
     const user_id = 1;
     const unixtime = selectedDate.getTime();
 

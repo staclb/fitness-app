@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-// import { v4 as uuidv4 } from 'uuid';
 import { fetchWorkoutsByDay } from '../api/workoutData';
 import SetModal from '../modals/SetModal';
 import { deleteWorkout, deleteSet } from '../api/workoutData';
@@ -66,6 +65,29 @@ const Workouts = () => {
     }
   };
 
+  //  have to have this functon because the hooks cannot be used in the api layer
+  const handleDeleteWorkout = async (exercise_id: number) => {
+    // change later when adding user auth
+    const user_id = 1;
+    const unixtime = selectedDate.getTime();
+    console.log(unixtime);
+    const deleted = await deleteWorkout(exercise_id);
+    if (deleted) {
+      refreshWorkouts(unixtime, user_id);
+    }
+  };
+  
+  const handleDeleteSet = async (exercise_id: number) => {
+    // change later when adding user auth
+    const user_id = 1;
+    const unixtime = selectedDate.getTime();
+    console.log(unixtime);
+    const deleted = await deleteSet(exercise_id);
+    if (deleted) {
+      refreshWorkouts(unixtime, user_id);
+    }
+  };
+
   // for fetching workout data
   useEffect(() => {
     const fetchData = async () => {
@@ -73,7 +95,6 @@ const Workouts = () => {
         const unixtime = selectedDate.getTime();
         const user_id = 1;
         const data = await fetchWorkoutsByDay(unixtime, user_id);
-        // setWorkouts(data);
         await refreshWorkouts(unixtime, user_id);
       } catch (error) {
         console.log('Error fetching workouts by day data');
@@ -92,14 +113,14 @@ const Workouts = () => {
           <div key={exercise}>
             <h2 onClick={() => handleExerciseClick(exercise)}>{exercise}</h2>
             <button onClick={() => toggleSetModal(exercise)} className='text-[40px] px-8'>+</button>
-            <button onClick={() => deleteWorkout(workouts[exercise][0].exercise_id)} className='text-[40px]'>-</button>
+            <button onClick={() => handleDeleteWorkout(workouts[exercise][0].exercise_id)} className='text-[40px]'>-</button>
             {selectedExercise === exercise && (
               <div>
                 {workouts[exercise].map((workout) => (
                   <div key={workout.set_id} className='flex'>
                     <p className='px-8'>Reps: {workout.reps}</p>
                     <p>Weight: {workout.weight}</p>
-                    <button onClick={() => deleteSet(workout.set_id)} className='text-[40px]'>-</button>
+                    <button onClick={() => handleDeleteSet(workout.set_id)} className='text-[40px]'>-</button>
                   </div>
                 ))}
               </div>
@@ -112,13 +133,9 @@ const Workouts = () => {
       </button>
       {openCalendar && <Calendar onChange={onChange} defaultValue={selectedDate} onClickDay={closeCalendarModal}/>}
 
-      {/* {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>} */}
       {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate}/>}
 
-
-      {/* {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} setWorkouts={setWorkouts} selectedExercise={selectedExercise}/>} */}
       {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} selectedExercise={selectedExercise}/>}
-
     </div>
   );
 };

@@ -1,3 +1,6 @@
+// import { useWorkoutStore } from '../zustand';
+// const { workouts, refreshWorkouts } = useWorkoutStore();
+
 export const fetchWorkoutsByDay = async (unixtime: number, user_id: number) => {
   try {
     const response = await fetch(`/api/workout/getByDay?unixtime=${unixtime}&user_id=${user_id}`);
@@ -26,15 +29,16 @@ export const postWorkout = async (data: any) => {
 };
 
 export const deleteWorkout = async (exercise_id: number) => {
+  // const { workouts, refreshWorkouts } = useWorkoutStore();
+  // console.log('selectedDate', selectedDate)
   try {
-    // console.log('exercise_id', exercise_id);
     const response = await fetch(`/api/workout/delete/${exercise_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    return response;
+    return response.ok;
   } catch (error) {
     console.log('Error posting workout');
   }
@@ -42,16 +46,13 @@ export const deleteWorkout = async (exercise_id: number) => {
 
 export const deleteSet = async (set_id: number) => {
   try {
-    // console.log('hi from delete set API FE')
-    // console.log('set_id', set_id);
     const response = await fetch(`/api/workout/deleteSet/${set_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     });
-    console.log('response', response)
-    return response;
+    return response.ok;
   } catch (error) {
     console.log('Error posting workout');
   }
