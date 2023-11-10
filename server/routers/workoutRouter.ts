@@ -13,12 +13,16 @@ router.get('/getByDay', workoutController.getWorkoutsByDay, (req: Request, res: 
   res.status(200).json(res.locals.workouts);
 });
 
+router.delete('/deleteSet/:setId', workoutController.deleteSet, (req: Request, res: Response, next: NextFunction) => {
+  res.status(200).json({message: 'success'});
+});
+
 router.delete('/delete/:exerciseId', workoutController.deleteWorkout, (req: Request, res: Response, next: NextFunction) => {
   res.status(200).json({message: 'success'});
 });
 
-router.delete('/deleteSet/:setId', workoutController.deleteSet, (req: Request, res: Response, next: NextFunction) => {
-  res.status(200).json({message: 'success'});
-});
+// router.delete('/deleteSet/:setId', workoutController.deleteSet, (req: Request, res: Response, next: NextFunction) => {
+//   res.status(200).json({message: 'success'});
+// });
 
 export default router;

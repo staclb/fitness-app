@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { fetchWorkoutsByDay } from '../api/workoutData';
 import SetModal from '../modals/SetModal';
 import { deleteWorkout, deleteSet } from '../api/workoutData';
+import { useWorkoutStore } from '../zustand';
 
 
 type ValuePiece = Date | null;
@@ -17,9 +18,11 @@ const Workouts = () => {
   const [value, onChange] = useState<Value>(new Date());
   const [openWorkout, setOpenWorkout] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
-  const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>({});
+  // const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>({});
   const [selectedExercise, setSelectedExercise] = useState('');
   const [openSetModal, setOpenSetModal] = useState(false);
+
+  const { workouts, refreshWorkouts } = useWorkoutStore();
 
   const openWorkoutModal = () => {
     setOpenWorkout(true);
@@ -41,7 +44,7 @@ const Workouts = () => {
   const toggleSetModal = (exercise: string) => {
     // needed to pass down exercise name to child comp
     setSelectedExercise(exercise);
-    // try setOpenSetModal(!xxx);
+    // try setOpenSetModal(!xxx); =? bang operator, the ntry with otehr modal fucntions
     if (openSetModal) {
       setOpenSetModal(false);
     } else {
@@ -70,13 +73,14 @@ const Workouts = () => {
         const unixtime = selectedDate.getTime();
         const user_id = 1;
         const data = await fetchWorkoutsByDay(unixtime, user_id);
-        setWorkouts(data);
+        // setWorkouts(data);
+        await refreshWorkouts(unixtime, user_id);
       } catch (error) {
         console.log('Error fetching workouts by day data');
       }
     };
     fetchData();
-  }, [selectedDate]);
+  }, [selectedDate, refreshWorkouts]);
 
   return (
     <div className='flex flex-col'>
@@ -108,9 +112,13 @@ const Workouts = () => {
       </button>
       {openCalendar && <Calendar onChange={onChange} defaultValue={selectedDate} onClickDay={closeCalendarModal}/>}
 
-      {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>}
+      {/* {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate} setWorkouts={setWorkouts}/>} */}
+      {openWorkout && <WorkoutModal closeWorkoutModal={closeWorkoutModal} selectedDate={selectedDate}/>}
 
-      {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} setWorkouts={setWorkouts} selectedExercise={selectedExercise}/>}
+
+      {/* {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} setWorkouts={setWorkouts} selectedExercise={selectedExercise}/>} */}
+      {openSetModal && <SetModal toggleSetModal={toggleSetModal} selectedDate={selectedDate} selectedExercise={selectedExercise}/>}
+
     </div>
   );
 };

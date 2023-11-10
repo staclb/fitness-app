@@ -42,13 +42,15 @@ export const deleteWorkout = async (exercise_id: number) => {
 
 export const deleteSet = async (set_id: number) => {
   try {
-    console.log('exercise_id', set_id);
-    const response = await fetch(`/api/workout/deleteSet${set_id}`, {
+    // console.log('hi from delete set API FE')
+    // console.log('set_id', set_id);
+    const response = await fetch(`/api/workout/deleteSet/${set_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     });
+    console.log('response', response)
     return response;
   } catch (error) {
     console.log('Error posting workout');

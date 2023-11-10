@@ -168,6 +168,7 @@ const workoutController = {
     }
   },
   deleteSet: async (req: Request, res: Response, next: NextFunction) => {
+    // console.log('hi from delete set cotnroller func')
     try {
       const { setId } = req.params;
       console.log(setId)
