@@ -24,7 +24,7 @@ export const postWorkout = async (data: any) => {
     });
     return response;
   } catch (error) {
-    console.log('Error posting workout');
+    console.log('Error posting a workout');
   }
 };
 
@@ -40,7 +40,7 @@ export const deleteWorkout = async (exercise_id: number) => {
     });
     return response.ok;
   } catch (error) {
-    console.log('Error posting workout');
+    console.log('Error deleting a workout');
   }
 };
 
@@ -54,6 +54,21 @@ export const deleteSet = async (set_id: number) => {
     });
     return response.ok;
   } catch (error) {
-    console.log('Error posting workout');
+    console.log('Error deleting a set');
+  }
+};
+// fix types here for editFormData
+export const updateSet = async (set_id: number, editFormData: any) => {
+  try {
+    const response = await fetch(`/api/workout/updateSet/${set_id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(editFormData)
+    });
+    return response.ok;
+  } catch (error) {
+    console.log('Error updating workout');
   }
 };

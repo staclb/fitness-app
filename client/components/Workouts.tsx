@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-import { fetchWorkoutsByDay } from '../api/workoutData';
+import { fetchWorkoutsByDay, updateSet, deleteWorkout, deleteSet } from '../api/workoutData';
 import SetModal from '../modals/SetModal';
-import { deleteWorkout, deleteSet } from '../api/workoutData';
+// import { deleteWorkout, deleteSet } from '../api/workoutData';
 import { useWorkoutStore } from '../zustand';
+
 
 
 type ValuePiece = Date | null;
@@ -20,6 +21,9 @@ const Workouts = () => {
   // const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>({});
   const [selectedExercise, setSelectedExercise] = useState('');
   const [openSetModal, setOpenSetModal] = useState(false);
+  // for editing weight + reps for a set
+  const [editingSetId, setEditingSetId] = useState(null);
+  const [editFormData, setEditFormData] = useState({reps: '', weight: ''});
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
 
@@ -76,7 +80,7 @@ const Workouts = () => {
       refreshWorkouts(unixtime, user_id);
     }
   };
-  
+
   const handleDeleteSet = async (exercise_id: number) => {
     // change later when adding user auth
     const user_id = 1;
@@ -86,6 +90,28 @@ const Workouts = () => {
     if (deleted) {
       refreshWorkouts(unixtime, user_id);
     }
+    // error case?
+  };
+
+  // fix type for workout parameter
+  const handleEditClick = (workout: any) => {
+    console.log('hi from edit function');
+    setEditingSetId(workout.set_id);
+    setEditFormData({ reps: workout.reps, weight: workout.weight });
+  };
+
+  // fix type for workout parameter
+  const handleSaveClick = async(setId: any) => {
+    console.log('hi from save function');
+    console.log(editFormData)
+    const updated = await updateSet(setId, editFormData);
+    const user_id = 1;
+    const unixtime = selectedDate.getTime();
+    if (updated) {
+      setEditingSetId(null);
+      refreshWorkouts(unixtime, user_id);
+    }
+    // error case?
   };
 
   // for fetching workout data
@@ -118,8 +144,18 @@ const Workouts = () => {
               <div>
                 {workouts[exercise].map((workout) => (
                   <div key={workout.set_id} className='flex'>
-                    <p className='px-8'>Reps: {workout.reps}</p>
-                    <p>Weight: {workout.weight}</p>
+                    {editingSetId === workout.set_id ? (
+                      <div>
+                        <input type='number' value={editFormData.reps} onChange={(e) => setEditFormData({ ...editFormData, reps: e.target.value })}></input>
+                        <input type='number' value={editFormData.weight} onChange={(e) => setEditFormData({ ...editFormData, weight: e.target.value })}></input>
+                        <button onClick={() => handleSaveClick(workout.set_id)}>SAVE</button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p onClick={() => handleEditClick(workout)} className='px-8'>Reps: {workout.reps}</p>
+                        <p onClick={() => handleEditClick(workout)} >Weight: {workout.weight}</p>
+                      </div>
+                    )}
                     <button onClick={() => handleDeleteSet(workout.set_id)} className='text-[40px]'>-</button>
                   </div>
                 ))}

@@ -170,7 +170,7 @@ const workoutController = {
   deleteSet: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { setId } = req.params;
-      console.log(setId)
+      console.log(setId);
       const deleteSetQuery = `
         DELETE FROM sets
         WHERE set_id = $1
@@ -182,6 +182,29 @@ const workoutController = {
     } catch (error) {
       return next({
         log: `Error in workoutController.deleteSet, ${error}`,
+        status: 400,
+        message: { err: 'An error occurred' }
+      });
+    }
+  },
+  updateSet: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { setId } = req.params;
+      const { reps, weight } = req.body;
+      // console.log(reps, weight);
+      // console.log(setId);
+      const updateSetQuery = `
+        UPDATE sets
+        SET weight = $1, reps = $2
+        WHERE set_id = $3
+        `;
+      const setQueryValues = [Number(weight), Number(reps), Number(setId)];
+      console.log(setQueryValues)
+      await query(updateSetQuery, setQueryValues);
+      return next();
+    } catch (error) {
+      return next({
+        log: `Error in workoutController.updateSet, ${error}`,
         status: 400,
         message: { err: 'An error occurred' }
       });
