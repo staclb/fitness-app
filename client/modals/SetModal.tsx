@@ -3,7 +3,11 @@ import { SetModalProps } from '../../types/types';
 import { postWorkout } from '../api/workoutData';
 import { useWorkoutStore } from '../zustand';
 
-const SetModal: React.FC<SetModalProps> = ({ toggleSetModal, selectedDate, selectedExercise }) => {
+const SetModal: React.FC<SetModalProps> = ({
+  toggleSetModal,
+  selectedDate,
+  selectedExercise,
+}) => {
   const { refreshWorkouts } = useWorkoutStore();
   const handlePostSet = async (event: any) => {
     event.preventDefault();
@@ -13,9 +17,9 @@ const SetModal: React.FC<SetModalProps> = ({ toggleSetModal, selectedDate, selec
     const workoutData = {
       weight: Number(event.target.weight.value),
       reps: Number(event.target.reps.value),
-      user_id: user_id,
-      unixtime: unixtime,
-      name: selectedExercise
+      user_id,
+      unixtime,
+      name: selectedExercise,
     };
 
     try {
@@ -30,11 +34,11 @@ const SetModal: React.FC<SetModalProps> = ({ toggleSetModal, selectedDate, selec
     <div>
       <div>
         <button onClick={() => toggleSetModal('')}>
-        <i className="material-icons text-[20px] text-red-500">cancel</i>
+          <i className="material-icons text-[20px] text-red-500">cancel</i>
         </button>
       </div>
       <div>
-        <form className='flex flex-col' onSubmit={handlePostSet}>
+        <form className="flex flex-col" onSubmit={handlePostSet}>
           <label className="text-red-500">
             Weight:
             <input type="number" name="weight" />
@@ -43,7 +47,7 @@ const SetModal: React.FC<SetModalProps> = ({ toggleSetModal, selectedDate, selec
             Reps:
             <input type="number" name="reps" />
           </label>
-          <button className="text-red-500" type='submit'>
+          <button className="text-red-500" type="submit">
             <i className="material-icons text-[20px] text-red-500">save</i>
           </button>
         </form>
