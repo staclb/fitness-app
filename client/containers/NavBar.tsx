@@ -4,9 +4,9 @@ import { useNavigate } from 'react-router-dom';
 const NavBar = () => {
   const navigate = useNavigate();
   return (
-    <div className='flex justify-around items-end border-4 border-indigo-500'>
-      <button onClick={() => {navigate('/Workouts');}}>Workouts</button>
-      <button onClick={() => {navigate('/Progress');}}>Progress</button>
+    <div className='flex justify-around items-end bg-slate-300 text-white font-bold py-4 px-4 rounded'>
+      <button className="material-icons text-[30px]" onClick={() => {navigate('/Workouts');}}>fitness_center</button>
+      <button className="material-icons text-[30px]" onClick={() => {navigate('/Progress');}}>signal_cellular_alt</button>
     </div>
   );
 };

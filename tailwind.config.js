@@ -3,7 +3,11 @@
 module.exports = {
   content: ['./client/*.{html,tsx,ts,js,jsx}', './client/**/*.{html,tsx,ts,js,jsx}','./client/**/*'],
   theme: {
-    extend: {}
+    extend: {
+      // textColor: {
+      //   DEFAULT: '#f8fafc'
+      // }
+    }
   },
   plugins: []
 };

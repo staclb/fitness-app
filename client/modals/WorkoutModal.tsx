@@ -31,23 +31,27 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({ closeWorkoutModal, selected
   return (
     <div>
       <div>
-        <button onClick={() => closeWorkoutModal()}>X</button>
+        <button onClick={() => closeWorkoutModal()}>
+          <i className="material-icons text-[20px] text-red-500">cancel</i>
+        </button>
       </div>
       <div className='flex flex-col'>
-        <form onSubmit={handlePostWorkout}>
-          <label>
+        <form className='flex flex-col' onSubmit={handlePostWorkout}>
+          <label className="text-red-500">
             Workout:
             <input type="text" name="name" />
           </label>
-          <label>
+          <label className="text-red-500">
             Weight:
             <input type="number" name="weight" />
           </label>
-          <label>
+          <label className="text-red-500">
             Reps:
             <input type="number" name="reps" />
           </label>
-          <button type='submit'>Save</button>
+          <button type='submit'>
+            <i className="material-icons text-[20px] text-red-500">save</i>
+          </button>
         </form>
       </div>
     </div>

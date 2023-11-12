@@ -28,21 +28,27 @@ const SetModal: React.FC<SetModalProps> = ({ toggleSetModal, selectedDate, selec
   };
   return (
     <div>
-      <div className='flex flex-col'>
-        <form onSubmit={handlePostSet}>
-          <label>
+      <div>
+        <button onClick={() => toggleSetModal('')}>
+        <i className="material-icons text-[20px] text-red-500">cancel</i>
+        </button>
+      </div>
+      <div>
+        <form className='flex flex-col' onSubmit={handlePostSet}>
+          <label className="text-red-500">
             Weight:
             <input type="number" name="weight" />
           </label>
-          <label>
+          <label className="text-red-500">
             Reps:
             <input type="number" name="reps" />
           </label>
-          <button type='submit'>Save</button>
+          <button className="text-red-500" type='submit'>
+            <i className="material-icons text-[20px] text-red-500">save</i>
+          </button>
         </form>
       </div>
     </div>
-
   );
 };
 

@@ -103,7 +103,7 @@ const Workouts = () => {
   // fix type for workout parameter
   const handleSaveClick = async(setId: any) => {
     console.log('hi from save function');
-    console.log(editFormData)
+    console.log(editFormData);
     const updated = await updateSet(setId, editFormData);
     const user_id = 1;
     const unixtime = selectedDate.getTime();
@@ -130,33 +130,41 @@ const Workouts = () => {
   }, [selectedDate, refreshWorkouts]);
 
   return (
-    <div className='flex flex-col'>
-      <button className="bg-blue-500 text-white font-bold " onClick={openCalendarModal}>
+    <div className='flex flex-col relative h-full border-2 border-red-500'>
+      <button className="bg-slate-300 text-white font-bold py-2 px-4 rounded text-[30px]" onClick={openCalendarModal}>
         {currentDate(selectedDate)}
       </button>
-      <div>
+      <div className='px-5'>
         {Object.keys(workouts).map((exercise: string) => (
           <div key={exercise}>
-            <h2 onClick={() => handleExerciseClick(exercise)}>{exercise}</h2>
-            <button onClick={() => toggleSetModal(exercise)} className='text-[40px] px-8'>+</button>
-            <button onClick={() => handleDeleteWorkout(workouts[exercise][0].exercise_id)} className='text-[40px]'>-</button>
+            <h2 className='text-[30px] text-red-500' onClick={() => handleExerciseClick(exercise)}>{exercise}</h2>
+            <button onClick={() => toggleSetModal(exercise)} className='px-5 '>
+              <i className='material-icons text-[30px] text-red-500'>add</i>
+            </button>
+            <button onClick={() => handleDeleteWorkout(workouts[exercise][0].exercise_id)}>
+              <i className="material-icons text-[30px] text-red-500">delete</i>
+            </button>
             {selectedExercise === exercise && (
-              <div>
+              <div className='border-2 border-red-500 flex flex-wrap'>
                 {workouts[exercise].map((workout) => (
                   <div key={workout.set_id} className='flex'>
                     {editingSetId === workout.set_id ? (
-                      <div>
-                        <input type='number' value={editFormData.reps} onChange={(e) => setEditFormData({ ...editFormData, reps: e.target.value })}></input>
-                        <input type='number' value={editFormData.weight} onChange={(e) => setEditFormData({ ...editFormData, weight: e.target.value })}></input>
-                        <button onClick={() => handleSaveClick(workout.set_id)}>SAVE</button>
+                      <div className='flex flex-col'>
+                        <input className="text-red-500" type='number' value={editFormData.reps} onChange={(e) => setEditFormData({ ...editFormData, reps: e.target.value })}></input>
+                        <input className="text-red-500" type='number' value={editFormData.weight} onChange={(e) => setEditFormData({ ...editFormData, weight: e.target.value })}></input>
+                        <button onClick={() => handleSaveClick(workout.set_id)}>
+                          <i className="material-icons text-[20px] text-red-500">save</i>
+                        </button>
                       </div>
                     ) : (
                       <div>
-                        <p onClick={() => handleEditClick(workout)} className='px-8'>Reps: {workout.reps}</p>
-                        <p onClick={() => handleEditClick(workout)} >Weight: {workout.weight}</p>
+                        <p className='px-8 text-[15px] text-red-500' onClick={() => handleEditClick(workout)}>Reps: {workout.reps}</p>
+                        <p className='px-8 text-[15px] text-red-500' onClick={() => handleEditClick(workout)} >Weight: {workout.weight}</p>
                       </div>
                     )}
-                    <button onClick={() => handleDeleteSet(workout.set_id)} className='text-[40px]'>-</button>
+                    <button onClick={() => handleDeleteSet(workout.set_id)} className='text-[40px]'>
+                      <i className="material-icons text-[20px] text-red-500">delete</i>
+                    </button>
                   </div>
                 ))}
               </div>
@@ -164,8 +172,8 @@ const Workouts = () => {
           </div>
         ))}
       </div>
-      <button className="bg-green-500 text-white font-bold py-2 px-4 rounded" onClick={openWorkoutModal}>
-        +
+      <button className="absolute bottom-5 right-5 bg-slate-300 text-white font-bold rounded-full p-2 h-14 w-14" onClick={openWorkoutModal}>
+        <i className='material-icons text-[40px]'>add</i>
       </button>
       {openCalendar && <Calendar onChange={onChange} defaultValue={selectedDate} onClickDay={closeCalendarModal}/>}
 
