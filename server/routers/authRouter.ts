@@ -12,4 +12,12 @@ router.post(
   },
 );
 
+router.post(
+  '/login',
+  authController.userLogin,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({ message: 'success', token: res.locals.token });
+  },
+);
+
 export default router;
