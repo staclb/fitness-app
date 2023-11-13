@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { WorkoutStore, WorkoutsState } from '../types/types';
+import { WorkoutStore, WorkoutsState, AuthState } from '../types/types';
 import { fetchWorkoutsByDay } from './api/workoutData';
 
 export const useWorkoutStore = create<WorkoutStore>((set) => ({
@@ -17,3 +17,8 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
     set((state) => ({ workouts: sortedData }));
   }
 }));
+
+export const userAuthStore = create<AuthState>((set) => ({
+  token: null,
+  setToken: (token) => set({ token })
+}))

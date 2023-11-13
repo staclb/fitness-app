@@ -45,7 +45,9 @@ export interface WorkoutStore {
   workouts: WorkoutsState;
   setWorkouts: (workouts: WorkoutsState) => void;
   refreshWorkouts: (unixtime: number, user_id: number) => Promise<void>;
-  // postWorkout: (data: any) => Promise<Response>;
-  // deleteWorkout: (exercise_id: number) => Promise<Response>;
-  // deleteSet: (set_id: number) => Promise<Response>;
+}
+
+export interface AuthState {
+  token: string | null;
+  setToken: (token: string | null) => void;
 }

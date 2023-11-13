@@ -72,3 +72,25 @@ export const updateSet = async (set_id: number, editFormData: any) => {
     console.log('Error updating workout');
   }
 };
+
+export const login = async (username: string, password: string) => {
+  try {
+    console.log('creds', username, password);
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password })
+    });
+
+    // if (!response) {
+    //   throw new Error('No response from server')
+    // }
+    const data = await response.json();
+    return data;
+    // return { data, status: response.status };
+  } catch (error) {
+    console.log('Error logging in');
+  }
+};
