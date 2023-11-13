@@ -170,14 +170,13 @@ const workoutController = {
   deleteSet: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { setId } = req.params;
-      console.log(setId);
+      // console.log(setId);
       const deleteSetQuery = `
         DELETE FROM sets
         WHERE set_id = $1
       `;
       const setQueryValues = [setId];
       await query(deleteSetQuery, setQueryValues);
-
       return next();
     } catch (error) {
       return next({
@@ -199,7 +198,7 @@ const workoutController = {
         WHERE set_id = $3
         `;
       const setQueryValues = [Number(weight), Number(reps), Number(setId)];
-      console.log(setQueryValues)
+      // console.log(setQueryValues)
       await query(updateSetQuery, setQueryValues);
       return next();
     } catch (error) {

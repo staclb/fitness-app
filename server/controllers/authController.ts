@@ -1,7 +1,13 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+// import dotenv from 'dotenv';
+import secret from '../config/secrets';
 import { query } from '../config/pgSetup';
+
+// const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key';
+// const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key';
+const { JWT_SECRET } = secret;
 
 const authController = {
   userSignup: async (req: Request, res: Response, next: NextFunction) => {
@@ -80,16 +86,44 @@ const authController = {
       }
 
       const token = jwt.sign(
-        { userId: user.id },
-        'your_jwt_secret', // Replace with your secret key
-        { expiresIn: '1h' },
+        {
+          userId: user.id,
+        },
+        JWT_SECRET,
+        {
+          expiresIn: '24h',
+        },
       );
-      // res.json({ message: 'Login successful', token });
-      res.locals.token = token
+
+      res.locals.token = token;
       return next();
     } catch (error) {
       return next({
         log: `Error in authController.Login, ${error}`,
+        status: 400,
+        message: { err: 'An error occurred' },
+      });
+    }
+  },
+  verifyToken: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // console.log('req', req)
+      const token = req.headers.authorization?.split(' ')[1];
+      // console.log('token', token)
+      if (!token) {
+        return res
+          .status(400)
+          .json({ error: 'No token, authoraization denied' });
+      }
+
+      const decodedToken = jwt.verify(token, JWT_SECRET);
+      // console.log(decodedToken)
+      // res.locals.decodedToken = decodedToken;
+      // console.log(res.locals, res.locals.decodedToken)
+      return next();
+    } catch (error) {
+      return next({
+        log: `Error in authController.verifyToken, ${error}`,
         status: 400,
         message: { err: 'An error occurred' },
       });

@@ -6,3 +6,6 @@ dist
 
 # from jest
 coverage
+
+# sensitive info
+secrets.ts

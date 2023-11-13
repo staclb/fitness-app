@@ -20,4 +20,12 @@ router.post(
   },
 );
 
+router.post(
+  '/auth',
+  authController.verifyToken,
+  (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({ message: 'success', token: res.locals.decodedToken });
+  },
+);
+
 export default router;
