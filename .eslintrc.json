@@ -38,7 +38,8 @@
          }
       ],
       "react/jsx-filename-extension": [2, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
-      "prettier/prettier": "error"
+      "prettier/prettier": "error",
+      "react/function-component-definition": "off"
    },
   "root": true,
   "settings": {

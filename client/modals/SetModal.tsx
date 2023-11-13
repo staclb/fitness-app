@@ -3,11 +3,11 @@ import { SetModalProps } from '../../types/types';
 import { postWorkout } from '../api/workoutData';
 import { useWorkoutStore } from '../zustand';
 
-const SetModal: React.FC<SetModalProps> = ({
+const SetModal = ({
   toggleSetModal,
   selectedDate,
   selectedExercise,
-}) => {
+}: SetModalProps) => {
   const { refreshWorkouts } = useWorkoutStore();
   const handlePostSet = async (event: any) => {
     event.preventDefault();
