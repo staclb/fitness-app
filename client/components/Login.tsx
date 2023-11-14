@@ -2,11 +2,6 @@ import React, { useState } from 'react'
 import { login } from '../api/workoutData'
 import { userAuthStore } from '../zustand'
 import { useNavigate } from 'react-router-dom';
-// finish login, signup, sign out for FE
-// need to go around eahc function and replace the user_id with the token
-// also need to store token in zustand storage
-// styling for the new pages
-// token expire logic FE and BE => redirect user to login for anotehr token
 
 // button for saving is the same in places => might import
 // consider modularizing in general
@@ -14,8 +9,11 @@ import { useNavigate } from 'react-router-dom';
 // centralize errors on FE, for example when a repinse could be empty/und?
   // possibly on BE too => cover all async func's and actions
 
-// left off => token set to Store, Login is default load but nav bar is on it
-  // also fix styling for login
+// signout btton on top left => maybe a side bar with three lines 
+
+// look into build problems
+
+// error boundaries in React to handle errors in UI components
 
 const Login = () => {
   const [username, setUsername] = useState('')
@@ -25,26 +23,21 @@ const Login = () => {
   const { setToken } = userAuthStore();
   const navigate = useNavigate();
 
-  // event typing
+  // fix any event typing
   const handleLogin = async (event: any) => {
     event.preventDefault();
-    // console.log(username, password)
     try {
       const response = await login(username, password);
-      // const { data, status } = await login(username, password);
-      // console.log('response', response)
 
-      // fix, not verifying successful login correctly
+      // login bug?
 
       if (response) {
         console.log('Login Successful:', response);
         setToken(response.token)
-        console.log('hi')
         navigate('/Workouts');
       } else {
         setErrorMessage('Login failed');
       }
-      // console.log('response', response)
     } catch (error) {
       console.error('Login error:', error);
       setErrorMessage('Login failed');
@@ -52,11 +45,12 @@ const Login = () => {
   }
 
   return (
-    <div>
+    <div className='flex justify-center items-center h-screen'>
       <form onSubmit={handleLogin}>
         <div>
-        <label htmlFor="username">Username:</label>
+        <label className="text-red-500" htmlFor="username">Username:</label>
           <input
+            className="text-red-500"
             type="text"
             id="username"
             value={username}
@@ -64,8 +58,9 @@ const Login = () => {
           />
         </div>
         <div>
-        <label htmlFor="password">Password:</label>
+        <label className="text-red-500" htmlFor="password">Password:</label>
           <input
+            className="text-red-500"
             type="text"
             id="password"
             value={password}

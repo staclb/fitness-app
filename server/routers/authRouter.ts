@@ -24,7 +24,7 @@ router.post(
   '/auth',
   authController.verifyToken,
   (req: Request, res: Response, next: NextFunction) => {
-    res.status(200).json({ message: 'success', token: res.locals.decodedToken });
+    res.status(200).json({ message: 'success' });
   },
 );
 

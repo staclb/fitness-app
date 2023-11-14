@@ -1,25 +1,15 @@
 import type { Request, Response, NextFunction, RequestHandler } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-// import dotenv from 'dotenv';
 import secret from '../config/secrets';
 import { query } from '../config/pgSetup';
 
-// const JWT_SECRET = process.env.JWT_SECRET || 'default_secret_key';
-// const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_key';
 const { JWT_SECRET } = secret;
 
 const authController = {
   userSignup: async (req: Request, res: Response, next: NextFunction) => {
-    // extract neccesary data from req body
-    // check if the user exists, if so go next
-    // if not create a user, then go next
     const { username, password, email } = req.body;
-    // console.log('hi', username, password, email);
-
     try {
-      // check if email exists in db
-      // if not then create query + hash pw
       const emailCheckQuery = `
         SELECT * 
         FROM users
@@ -50,12 +40,8 @@ const authController = {
         VALUES ($1, $2, $3) 
         RETURNING id
       `;
-      const result = await query(insertUserQuery, [
-        username,
-        email,
-        hashedPassword,
-      ]);
-      // console.log('result', result);
+      await query(insertUserQuery, [username, email, hashedPassword]);
+
       return next();
     } catch (error) {
       return next({
@@ -66,8 +52,8 @@ const authController = {
     }
   },
   userLogin: async (req: Request, res: Response, next: NextFunction) => {
-    const { username, password } = req.body;
     try {
+      const { username, password } = req.body;
       const checkUserQuery = `
         SELECT * 
         FROM users
@@ -94,7 +80,7 @@ const authController = {
           expiresIn: '24h',
         },
       );
-      console.log('token', token)
+
       res.locals.token = token;
       return next();
     } catch (error) {
@@ -107,9 +93,7 @@ const authController = {
   },
   verifyToken: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // console.log('req', req)
       const token = req.headers.authorization?.split(' ')[1];
-      // console.log('token', token)
       if (!token) {
         return res
           .status(400)
@@ -117,9 +101,8 @@ const authController = {
       }
 
       const decodedToken = jwt.verify(token, JWT_SECRET);
-      console.log(decodedToken)
-      // res.locals.decodedToken = decodedToken;
-      // console.log(res.locals, res.locals.decodedToken)
+
+      res.locals.decodedToken = decodedToken;
       return next();
     } catch (error) {
       return next({

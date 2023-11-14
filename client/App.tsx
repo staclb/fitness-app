@@ -1,7 +1,7 @@
-import React, { type ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 // import './style.css'
 import NavBar from './containers/NavBar';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Workouts from './components/Workouts';
 import Progress from './components/Progress';
 import Login from './components/Login'
@@ -16,13 +16,13 @@ function App (): ReactElement {
     // the fucntion that describes vs teh actual object the component returns
   const AuthCheckedWorkouts = authCheck(Workouts);
   const AuthCheckedProgress = authCheck(Progress);
+  const location = useLocation()
+
+  const showNavBar = location.pathname !== '/' && location.pathname !=='/SignUp'
 
   return (
-    <div className='flex flex-col h-screen bg-slate-50'>
+    <div className='flex flex-col h-screen bg-slate-950'>
       <div className='flex-grow'>
-        {/* <Routes>
-          <Route path='/' element={<Login />}></Route>
-        </Routes> */}
         <Routes>
           <Route path='/Workouts' element={<AuthCheckedWorkouts />} />
           <Route path='/Progress' element={<AuthCheckedProgress />} />
@@ -30,7 +30,7 @@ function App (): ReactElement {
           <Route path='/SignUp' element={<SignUp />}></Route>
         </Routes>
       </div>
-      <NavBar />
+      {showNavBar && <NavBar />}
     </div>
   );
 }

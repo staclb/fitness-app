@@ -8,39 +8,32 @@ const SignUp = () => {
   const [email, setEmail] = useState('')
   const [errorMessage, setErrorMessage] = useState('');
 
-  // const { setToken } = userAuthStore();
   const navigate = useNavigate();
 
-  // event typing
+  // fix any event typing
   const handleLogin = async (event: any) => {
     event.preventDefault();
-    // console.log(username, password)
     try {
       const response = await signUp(username, password, email);
-      // const { data, status } = await login(username, password);
-      console.log('response', response)
       if (response.message === 'success') {
-        // console.log('Login Successful:', response.token);
-        // setToken(responce.token)
-        // console.log('hi from if res exists')
         navigate('/');
       } else {
         setErrorMessage(response.error);
         console.log('error', response.error)
       }
-      // console.log('response', response)
     } catch (error) {
       console.error('Sign-up error:', error);
-      // setErrorMessage('Login failed');
+      setErrorMessage('Login failed');
     }
   }
 
   return (
-    <div>
+    <div className='flex justify-center items-center h-screen'>
       <form onSubmit={handleLogin}>
         <div>
-        <label htmlFor="username">Username:</label>
+        <label className="text-red-500" htmlFor="username">Username:</label>
           <input
+            className="text-red-500"
             type="text"
             id="username"
             value={username}
@@ -48,8 +41,9 @@ const SignUp = () => {
           />
         </div>
         <div>
-        <label htmlFor="email">Email:</label>
+        <label className="text-red-500" htmlFor="email">Email:</label>
           <input
+            className="text-red-500"
             type="text"
             id="email"
             value={email}
@@ -57,8 +51,9 @@ const SignUp = () => {
           />
         </div>
         <div>
-        <label htmlFor="password">Password:</label>
+        <label className="text-red-500" htmlFor="password">Password:</label>
           <input
+            className="text-red-500"
             type="text"
             id="password"
             value={password}

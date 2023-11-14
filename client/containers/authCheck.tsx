@@ -17,17 +17,17 @@ const authCheck = (WrappedComponent: ComponentType) => {
           if (decodedToken.exp && decodedToken.exp * 1000 < Date.now()) {
             // Token has expired
             setToken(null);
-            navigate('/login');
+            navigate('/');
           }
         } catch (error) {
           // In case of token decoding errors, treat it as invalid
           console.error('Error decoding token:', error);
           setToken(null);
-          navigate('/login');
+          navigate('/');
         }
       } else {
         // No token found
-        navigate('/login');
+        navigate('/');
       }
     }, [token, navigate, setToken]);
 

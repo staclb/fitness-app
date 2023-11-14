@@ -1,7 +1,7 @@
 import React from 'react';
 import { SetModalProps } from '../../types/types';
 import { postWorkout } from '../api/workoutData';
-import { useWorkoutStore } from '../zustand';
+import { useWorkoutStore, userAuthStore } from '../zustand';
 
 const SetModal = ({
   toggleSetModal,
@@ -9,22 +9,23 @@ const SetModal = ({
   selectedExercise,
 }: SetModalProps) => {
   const { refreshWorkouts } = useWorkoutStore();
+  const { token } = userAuthStore();
   const handlePostSet = async (event: any) => {
     event.preventDefault();
-    const user_id = 1;
+    // const user_id = 1;
     const unixtime = selectedDate.getTime();
 
     const workoutData = {
       weight: Number(event.target.weight.value),
       reps: Number(event.target.reps.value),
-      user_id,
+      // user_id,
       unixtime,
       name: selectedExercise,
     };
 
     try {
-      await postWorkout(workoutData);
-      await refreshWorkouts(unixtime, user_id);
+      await postWorkout(workoutData, token);
+      await refreshWorkouts(unixtime, token);
       toggleSetModal(selectedExercise);
     } catch (error) {
       console.log('Error posting workout data');

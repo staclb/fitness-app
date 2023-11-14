@@ -76,23 +76,23 @@ function Workouts() {
   //  have to have this functon because the hooks cannot be used in the api layer
   const handleDeleteWorkout = async (exercise_id: number) => {
     // change later when adding user auth
-    const user_id = 1;
+    // const user_id = 1;
     const unixtime = selectedDate.getTime();
-    console.log(unixtime);
-    const deleted = await deleteWorkout(exercise_id);
+    // console.log(unixtime);
+    const deleted = await deleteWorkout(exercise_id, token);
     if (deleted) {
-      refreshWorkouts(unixtime, user_id);
+      refreshWorkouts(unixtime, token);
     }
   };
 
   const handleDeleteSet = async (exercise_id: number) => {
     // change later when adding user auth
-    const user_id = 1;
+    // const user_id = 1;
     const unixtime = selectedDate.getTime();
-    console.log(unixtime);
-    const deleted = await deleteSet(exercise_id);
+    // console.log(unixtime);
+    const deleted = await deleteSet(exercise_id, token);
     if (deleted) {
-      refreshWorkouts(unixtime, user_id);
+      refreshWorkouts(unixtime, token);
     }
     // error case?
   };
@@ -106,14 +106,14 @@ function Workouts() {
 
   // fix type for workout parameter
   const handleSaveClick = async (setId: any) => {
-    console.log('hi from save function');
-    console.log(editFormData);
-    const updated = await updateSet(setId, editFormData);
-    const user_id = 1;
+    // console.log('hi from save function');
+    // console.log(editFormData);
+    const updated = await updateSet(setId, editFormData, token);
+    // const user_id = 1;
     const unixtime = selectedDate.getTime();
     if (updated) {
       setEditingSetId(null);
-      refreshWorkouts(unixtime, user_id);
+      refreshWorkouts(unixtime, token);
     }
     // error case?
   };
@@ -123,9 +123,9 @@ function Workouts() {
     const fetchData = async () => {
       try {
         const unixtime = selectedDate.getTime();
-        const user_id = 1;
-        const data = await fetchWorkoutsByDay(unixtime, user_id);
-        await refreshWorkouts(unixtime, user_id);
+        // const user_id = 1;
+        // const data = await fetchWorkoutsByDay(unixtime, token);
+        await refreshWorkouts(unixtime, token);
       } catch (error) {
         console.log('Error fetching workouts by day data');
       }
