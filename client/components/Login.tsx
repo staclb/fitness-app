@@ -30,12 +30,15 @@ const Login = () => {
     event.preventDefault();
     // console.log(username, password)
     try {
-      const responce = await login(username, password);
+      const response = await login(username, password);
       // const { data, status } = await login(username, password);
       // console.log('response', response)
-      if (responce) {
-        console.log('Login Successful:', responce.token);
-        setToken(responce.token)
+
+      // fix, not verifying successful login correctly
+
+      if (response) {
+        console.log('Login Successful:', response);
+        setToken(response.token)
         console.log('hi')
         navigate('/Workouts');
       } else {
@@ -71,6 +74,9 @@ const Login = () => {
         </div>
         <button className="text-red-500" type="submit">
             <i className="material-icons text-[20px] text-red-500">save</i>
+        </button>
+        <button className="text-red-500" type="submit" onClick={() => {navigate('/SignUp');}}>
+          SignUp
         </button>
         {errorMessage && <p>{errorMessage}</p>}
       </form>

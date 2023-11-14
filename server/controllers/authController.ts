@@ -94,7 +94,7 @@ const authController = {
           expiresIn: '24h',
         },
       );
-
+      console.log('token', token)
       res.locals.token = token;
       return next();
     } catch (error) {
@@ -117,7 +117,7 @@ const authController = {
       }
 
       const decodedToken = jwt.verify(token, JWT_SECRET);
-      // console.log(decodedToken)
+      console.log(decodedToken)
       // res.locals.decodedToken = decodedToken;
       // console.log(res.locals, res.locals.decodedToken)
       return next();

@@ -1,6 +1,3 @@
-// import { useWorkoutStore } from '../zustand';
-// const { workouts, refreshWorkouts } = useWorkoutStore();
-
 export const fetchWorkoutsByDay = async (unixtime: number, user_id: number) => {
   try {
     const response = await fetch(`/api/workout/getByDay?unixtime=${unixtime}&user_id=${user_id}`);
@@ -31,11 +28,13 @@ export const postWorkout = async (data: any) => {
 export const deleteWorkout = async (exercise_id: number) => {
   // const { workouts, refreshWorkouts } = useWorkoutStore();
   // console.log('selectedDate', selectedDate)
+  // console.log(token)
   try {
     const response = await fetch(`/api/workout/delete/${exercise_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${token}`,
       },
     });
     return response.ok;
@@ -45,11 +44,13 @@ export const deleteWorkout = async (exercise_id: number) => {
 };
 
 export const deleteSet = async (set_id: number) => {
+  // console.log(token)
   try {
     const response = await fetch(`/api/workout/deleteSet/${set_id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${token}`,
       },
     });
     return response.ok;
@@ -59,11 +60,13 @@ export const deleteSet = async (set_id: number) => {
 };
 // fix types here for editFormData
 export const updateSet = async (set_id: number, editFormData: any) => {
+  // console.log(token)
   try {
     const response = await fetch(`/api/workout/updateSet/${set_id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(editFormData)
     });
@@ -82,6 +85,28 @@ export const login = async (username: string, password: string) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ username, password })
+    });
+
+    // if (!response) {
+    //   throw new Error('No response from server')
+    // }
+    const data = await response.json();
+    return data;
+    // return { data, status: response.status };
+  } catch (error) {
+    console.log('Error logging in');
+  }
+};
+
+export const signUp = async (username: string, password: string, email: string) => {
+  try {
+    console.log('creds', username, password, email);
+    const response = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username, password, email })
     });
 
     // if (!response) {

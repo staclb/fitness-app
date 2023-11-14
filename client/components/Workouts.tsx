@@ -10,7 +10,7 @@ import {
 } from '../api/workoutData';
 import SetModal from '../modals/SetModal';
 // import { deleteWorkout, deleteSet } from '../api/workoutData';
-import { useWorkoutStore } from '../zustand';
+import { useWorkoutStore, userAuthStore } from '../zustand';
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -29,6 +29,7 @@ function Workouts() {
   const [editFormData, setEditFormData] = useState({ reps: '', weight: '' });
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
+  const { token } = userAuthStore();
 
   const openWorkoutModal = () => {
     setOpenWorkout(true);
