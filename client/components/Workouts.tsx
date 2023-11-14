@@ -127,7 +127,7 @@ function Workouts() {
   }, [selectedDate, refreshWorkouts]);
 
   return (
-    <div className="flex flex-col relative h-full border-2 border-red-500">
+    <div className="flex flex-col relative h-full">
       <button
         className="bg-slate-300 text-white font-bold py-2 px-4 rounded text-[30px]"
         type="button"

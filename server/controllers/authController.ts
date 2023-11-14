@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import secret from '../config/secrets';
@@ -66,8 +66,10 @@ const authController = {
       }
 
       const user = userResult.rows[0];
+      console.log('here before pw check')
       const passwordCheck = await bcrypt.compare(password, user.password);
       if (!passwordCheck) {
+        console.log(passwordCheck)
         return res.status(400).json({ error: 'Incorrect password' });
       }
 

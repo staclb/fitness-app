@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SetModalProps } from '../../types/types';
 import { postWorkout } from '../api/workoutData';
 import { useWorkoutStore, userAuthStore } from '../zustand';
@@ -10,15 +10,18 @@ const SetModal = ({
 }: SetModalProps) => {
   const { refreshWorkouts } = useWorkoutStore();
   const { token } = userAuthStore();
-  const handlePostSet = async (event: any) => {
+  // added states for weight, reps because of event object typing
+  const [weight, setWeight] = useState('');
+  const [reps, setReps] = useState('');
+
+  const handlePostSet = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const user_id = 1;
+
     const unixtime = selectedDate.getTime();
 
     const workoutData = {
-      weight: Number(event.target.weight.value),
-      reps: Number(event.target.reps.value),
-      // user_id,
+      weight: Number(weight),
+      reps: Number(reps),
       unixtime,
       name: selectedExercise,
     };
@@ -34,19 +37,29 @@ const SetModal = ({
   return (
     <div>
       <div>
-        <button onClick={() => toggleSetModal('')}>
+        <button type="button" onClick={() => toggleSetModal('')}>
           <i className="material-icons text-[20px] text-red-500">cancel</i>
         </button>
       </div>
       <div>
         <form className="flex flex-col" onSubmit={handlePostSet}>
-          <label className="text-red-500">
+          <label htmlFor="weight" className="text-red-500">
             Weight:
-            <input type="number" name="weight" />
+            <input
+              type="number"
+              name="weight"
+              value={weight}
+              onChange={(e) => setWeight(e.target.value)}
+            />
           </label>
-          <label className="text-red-500">
+          <label htmlFor="reps" className="text-red-500">
             Reps:
-            <input type="number" name="reps" />
+            <input
+              type="number"
+              name="reps"
+              value={reps}
+              onChange={(e) => setReps(e.target.value)}
+            />
           </label>
           <button className="text-red-500" type="submit">
             <i className="material-icons text-[20px] text-red-500">save</i>
