@@ -2,14 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-import {
-  fetchWorkoutsByDay,
-  updateSet,
-  deleteWorkout,
-  deleteSet,
-} from '../api/workoutData';
+import { updateSet, deleteWorkout, deleteSet } from '../api/workoutData';
 import SetModal from '../modals/SetModal';
-// import { deleteWorkout, deleteSet } from '../api/workoutData';
 import { useWorkoutStore, userAuthStore } from '../zustand';
 
 type ValuePiece = Date | null;
@@ -74,23 +68,23 @@ function Workouts() {
   };
 
   //  have to have this functon because the hooks cannot be used in the api layer
-  const handleDeleteWorkout = async (exercise_id: number) => {
+  const handleDeleteWorkout = async (exerciseId: number) => {
     // change later when adding user auth
     // const user_id = 1;
     const unixtime = selectedDate.getTime();
     // console.log(unixtime);
-    const deleted = await deleteWorkout(exercise_id, token);
+    const deleted = await deleteWorkout(exerciseId, token);
     if (deleted) {
       refreshWorkouts(unixtime, token);
     }
   };
 
-  const handleDeleteSet = async (exercise_id: number) => {
+  const handleDeleteSet = async (exerciseId: number) => {
     // change later when adding user auth
     // const user_id = 1;
     const unixtime = selectedDate.getTime();
     // console.log(unixtime);
-    const deleted = await deleteSet(exercise_id, token);
+    const deleted = await deleteSet(exerciseId, token);
     if (deleted) {
       refreshWorkouts(unixtime, token);
     }
@@ -99,7 +93,6 @@ function Workouts() {
 
   // fix type for workout parameter
   const handleEditClick = (workout: any) => {
-    console.log('hi from edit function');
     setEditingSetId(workout.set_id);
     setEditFormData({ reps: workout.reps, weight: workout.weight });
   };
@@ -145,14 +138,15 @@ function Workouts() {
       <div className="px-5">
         {Object.keys(workouts).map((exercise: string) => (
           <div key={exercise}>
-            <h2
+            <button
               className="text-[30px] text-red-500"
               onClick={() => {
                 handleExerciseClick(exercise);
               }}
+              type="button"
             >
               {exercise}
-            </h2>
+            </button>
             <button
               type="button"
               onClick={() => {
@@ -211,22 +205,24 @@ function Workouts() {
                       </div>
                     ) : (
                       <div>
-                        <p
+                        <button
                           className="px-8 text-[15px] text-red-500"
                           onClick={() => {
                             handleEditClick(workout);
                           }}
+                          type="button"
                         >
                           Reps: {workout.reps}
-                        </p>
-                        <p
+                        </button>
+                        <button
                           className="px-8 text-[15px] text-red-500"
                           onClick={() => {
                             handleEditClick(workout);
                           }}
+                          type="button"
                         >
                           Weight: {workout.weight}
-                        </p>
+                        </button>
                       </div>
                     )}
                     <button
@@ -234,6 +230,7 @@ function Workouts() {
                         await handleDeleteSet(workout.set_id);
                       }}
                       className="text-[40px]"
+                      type="button"
                     >
                       <i className="material-icons text-[20px] text-red-500">
                         delete
@@ -249,6 +246,7 @@ function Workouts() {
       <button
         className="absolute bottom-5 right-5 bg-slate-300 text-white font-bold rounded-full p-2 h-14 w-14"
         onClick={openWorkoutModal}
+        type="button"
       >
         <i className="material-icons text-[40px]">add</i>
       </button>

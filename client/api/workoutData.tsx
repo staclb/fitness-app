@@ -39,9 +39,6 @@ export const deleteWorkout = async (
   exerciseId: number,
   token: string | null,
 ) => {
-  // const { workouts, refreshWorkouts } = useWorkoutStore();
-  // console.log('selectedDate', selectedDate)
-  // console.log(token)
   try {
     const response = await fetch(`/api/workout/delete/${exerciseId}`, {
       method: 'DELETE',
@@ -58,7 +55,6 @@ export const deleteWorkout = async (
 };
 
 export const deleteSet = async (setId: number, token: string | null) => {
-  // console.log(token)
   try {
     const response = await fetch(`/api/workout/deleteSet/${setId}`, {
       method: 'DELETE',
@@ -79,7 +75,6 @@ export const updateSet = async (
   editFormData: any,
   token: string | null,
 ) => {
-  // console.log(token)
   try {
     const response = await fetch(`/api/workout/updateSet/${setId}`, {
       method: 'PATCH',
@@ -106,12 +101,8 @@ export const login = async (username: string, password: string) => {
       body: JSON.stringify({ username, password }),
     });
 
-    // if (!response) {
-    //   throw new Error('No response from server')
-    // }
     const data = await response.json();
     return data;
-    // return { data, status: response.status };
   } catch (error) {
     console.log('Error logging in');
     return null;
@@ -136,5 +127,6 @@ export const signUp = async (
     return data;
   } catch (error) {
     console.log('Error logging in');
+    return null;
   }
 };

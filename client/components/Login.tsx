@@ -1,23 +1,25 @@
-import React, { useState } from 'react'
-import { login } from '../api/workoutData'
-import { userAuthStore } from '../zustand'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../api/workoutData';
+import { userAuthStore } from '../zustand';
 
 // button for saving is the same in places => might import
 // consider modularizing in general
 // theme for tailwind => decide on colors, text, font, etc
 // centralize errors on FE, for example when a repinse could be empty/und?
-  // possibly on BE too => cover all async func's and actions
+// possibly on BE too => cover all async func's and actions
 
-// signout btton on top left => maybe a side bar with three lines 
+// signout btton on top left => maybe a side bar with three lines
 
 // look into build problems
 
 // error boundaries in React to handle errors in UI components
 
+// continue fixing TS errors
+
 const Login = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
   const { setToken } = userAuthStore();
@@ -32,8 +34,7 @@ const Login = () => {
       // login bug?
 
       if (response) {
-        console.log('Login Successful:', response);
-        setToken(response.token)
+        setToken(response.token);
         navigate('/Workouts');
       } else {
         setErrorMessage('Login failed');
@@ -42,13 +43,13 @@ const Login = () => {
       console.error('Login error:', error);
       setErrorMessage('Login failed');
     }
-  }
+  };
 
   return (
-    <div className='flex justify-center items-center h-screen'>
+    <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleLogin}>
         <div>
-        <label className="text-red-500" htmlFor="username">Username:</label>
+          <label className="text-red-500">Username:</label>
           <input
             className="text-red-500"
             type="text"
@@ -58,7 +59,7 @@ const Login = () => {
           />
         </div>
         <div>
-        <label className="text-red-500" htmlFor="password">Password:</label>
+          <label className="text-red-500">Password:</label>
           <input
             className="text-red-500"
             type="text"
@@ -68,15 +69,21 @@ const Login = () => {
           />
         </div>
         <button className="text-red-500" type="submit">
-            <i className="material-icons text-[20px] text-red-500">save</i>
+          <i className="material-icons text-[20px] text-red-500">save</i>
         </button>
-        <button className="text-red-500" type="submit" onClick={() => {navigate('/SignUp');}}>
+        <button
+          className="text-red-500"
+          type="submit"
+          onClick={() => {
+            navigate('/SignUp');
+          }}
+        >
           SignUp
         </button>
         {errorMessage && <p>{errorMessage}</p>}
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
