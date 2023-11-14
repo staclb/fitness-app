@@ -1,28 +1,29 @@
 import React from 'react';
 import { WorkoutModalProps } from '../../types/types';
 import { postWorkout } from '../api/workoutData';
-import { useWorkoutStore } from '../zustand';
+import { useWorkoutStore, userAuthStore } from '../zustand';
 
 const WorkoutModal: React.FC<WorkoutModalProps> = ({ closeWorkoutModal, selectedDate } ) => {
   const { refreshWorkouts } = useWorkoutStore();
+  const { token } = userAuthStore();
   // type for event set to any - need to look into it
   const handlePostWorkout = async (event: any) => {
     event.preventDefault();
 
-    const user_id = 1;
+    // const user_id = 1;
     const unixtime = selectedDate.getTime();
 
     const workoutData = {
       name: event.target.name.value,
       weight: Number(event.target.weight.value),
       reps: Number(event.target.reps.value),
-      user_id: user_id,
+      // user_id: user_id,
       unixtime: unixtime
     };
 
     try {
-      await postWorkout(workoutData);
-      await refreshWorkouts(unixtime, user_id);
+      await postWorkout(workoutData, token);
+      await refreshWorkouts(unixtime, token);
       closeWorkoutModal();
     } catch (error) {
       console.log('Error posting workout data');

@@ -3,3 +3,9 @@ node_modules
 dist
 
 .env
+
+# from jest
+coverage
+
+# sensitive info
+secrets.ts

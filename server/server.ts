@@ -1,7 +1,7 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import type { ServerError } from '../types/types';
-import apiRouter from './routers/apiRouter'
+import apiRouter from './routers/apiRouter';
 
 const PORT = 3000;
 
@@ -21,7 +21,7 @@ app.use((err: ServerError, req: Request, res: Response, next: NextFunction) => {
   const defaultErr = {
     log: 'Error caught in global handler',
     status: 500,
-    message: { err: 'An error occurred' }
+    message: { err: 'An error occurred' },
   };
   const errorObj = { ...defaultErr, ...err };
   console.log(errorObj.log);

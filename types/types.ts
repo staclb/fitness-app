@@ -1,27 +1,26 @@
 import type { RequestHandler } from 'express';
 
-
 export interface ServerError {
-  err: '400'
+  err: '400';
 }
 
 export interface workoutController {
-  postWorkout: RequestHandler
+  postWorkout: RequestHandler;
 }
 
 export interface WorkoutModalProps {
-  closeWorkoutModal: () => void
+  closeWorkoutModal: () => void;
   selectedDate: Date;
   // using context can help avoid this line below
   // setWorkouts: React.Dispatch<React.SetStateAction<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>>;
 }
 
 export interface SetModalProps {
-  toggleSetModal: (exercise: string) => void
+  toggleSetModal: (exercise: string) => void;
   selectedDate: Date;
   // setWorkouts: React.Dispatch<React.SetStateAction<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>>;
   // set_id: number
-  selectedExercise: string
+  selectedExercise: string;
 }
 
 // export interface Workouts {
@@ -44,8 +43,14 @@ export interface WorkoutsState {
 export interface WorkoutStore {
   workouts: WorkoutsState;
   setWorkouts: (workouts: WorkoutsState) => void;
-  refreshWorkouts: (unixtime: number, user_id: number) => Promise<void>;
-  // postWorkout: (data: any) => Promise<Response>;
-  // deleteWorkout: (exercise_id: number) => Promise<Response>;
-  // deleteSet: (set_id: number) => Promise<Response>;
+  refreshWorkouts: (unixtime: number, token: string | null) => Promise<void>;
 }
+
+export interface AuthState {
+  token: string | null;
+  setToken: (token: string | null) => void;
+}
+
+// export interface WrappedComponent {
+
+// }
