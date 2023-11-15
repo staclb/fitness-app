@@ -37,6 +37,7 @@ const SignUp = () => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
         <div className="pb-2">
@@ -46,6 +47,7 @@ const SignUp = () => {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
         <div className="pb-2">
@@ -55,6 +57,7 @@ const SignUp = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
         <div className="flex justify-around">

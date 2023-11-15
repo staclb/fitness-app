@@ -2,9 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import WorkoutModal from '../modals/WorkoutModal';
-import { updateSet, deleteWorkout, deleteSet } from '../api/workoutData';
-import SetModal from '../modals/SetModal';
+import {
+  updateSet,
+  deleteWorkout,
+  deleteSet,
+  postWorkout,
+} from '../api/workoutData';
+// import SetModal from '../modals/SetModal';
 import { useWorkoutStore, userAuthStore } from '../zustand';
+import ConfirmationModal from '../modals/ConfirmationModal';
+// import { postWorkout } from '../api/workoutData';
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -21,6 +28,9 @@ function Workouts() {
   // for editing weight + reps for a set
   const [editingSetId, setEditingSetId] = useState(null);
   const [editFormData, setEditFormData] = useState({ reps: '', weight: '' });
+
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [workoutToDelete, setWorkoutToDelete] = useState(null);
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
   const { token } = userAuthStore();
@@ -42,19 +52,29 @@ function Workouts() {
     setOpenCalendar(false);
   };
 
-  const toggleSetModal = (exercise: string) => {
-    // needed to pass down exercise name to child comp
-    setSelectedExercise(exercise);
-    // try setOpenSetModal(!xxx); =? bang operator, the ntry with otehr modal fucntions
-    if (openSetModal) {
-      setOpenSetModal(false);
-    } else {
-      setOpenSetModal(true);
+  const handleAddSet = async (exercise: string) => {
+    try {
+      const unixtime = selectedDate.getTime();
+      const workoutData = {
+        weight: Number(
+          workouts[exercise][workouts[exercise].length - 1].weight,
+        ),
+        reps: Number(workouts[exercise][workouts[exercise].length - 1].reps),
+        unixtime,
+        name: exercise,
+      };
+      const response = await postWorkout(workoutData, token);
+      if (response) {
+        setSelectedExercise(exercise);
+        await refreshWorkouts(unixtime, token);
+      }
+    } catch (error) {
+      console.log('Error adding a set', error);
     }
   };
 
   const currentDate = (date: Date) => {
-    // const timestamp = new Date().getTime();
+    // forms date string for display
     const todaysDate = `${date.getMonth() + 1}/${date.getDate()}`;
     return todaysDate;
   };
@@ -67,21 +87,7 @@ function Workouts() {
     }
   };
 
-  //  have to have this functon because the hooks cannot be used in the api layer
-  const handleDeleteWorkout = async (exerciseId: number) => {
-    // change later when adding user auth
-    // const user_id = 1;
-    const unixtime = selectedDate.getTime();
-    // console.log(unixtime);
-    const deleted = await deleteWorkout(exerciseId, token);
-    if (deleted) {
-      refreshWorkouts(unixtime, token);
-    }
-  };
-
   const handleDeleteSet = async (exerciseId: number) => {
-    // change later when adding user auth
-    // const user_id = 1;
     const unixtime = selectedDate.getTime();
     // console.log(unixtime);
     const deleted = await deleteSet(exerciseId, token);
@@ -98,11 +104,8 @@ function Workouts() {
   };
 
   // fix type for workout parameter
-  const handleSaveClick = async (setId: any) => {
-    // console.log('hi from save function');
-    // console.log(editFormData);
+  const handleSaveClick = async (setId: number) => {
     const updated = await updateSet(setId, editFormData, token);
-    // const user_id = 1;
     const unixtime = selectedDate.getTime();
     if (updated) {
       setEditingSetId(null);
@@ -111,13 +114,33 @@ function Workouts() {
     // error case?
   };
 
+  const openDeleteConfirmation = (exerciseId: any) => {
+    setWorkoutToDelete(exerciseId);
+    setIsConfirmationModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (workoutToDelete) {
+      const deleted = await deleteWorkout(workoutToDelete, token);
+      setWorkoutToDelete(null);
+      if (deleted) {
+        const unixtime = selectedDate.getTime();
+        refreshWorkouts(unixtime, token);
+      }
+    }
+    setIsConfirmationModalOpen(false);
+  };
+
+  // perhaps not needed, could combine with confirm function
+  const handleCancelDelete = () => {
+    setIsConfirmationModalOpen(false);
+  };
+
   // for fetching workout data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const unixtime = selectedDate.getTime();
-        // const user_id = 1;
-        // const data = await fetchWorkoutsByDay(unixtime, token);
         await refreshWorkouts(unixtime, token);
       } catch (error) {
         console.log('Error fetching workouts by day data');
@@ -135,7 +158,7 @@ function Workouts() {
       >
         {currentDate(selectedDate)}
       </button>
-      <div className="px-5">
+      <div className="px-4">
         {Object.keys(workouts).map((exercise: string) => (
           <div key={exercise}>
             <button
@@ -147,10 +170,11 @@ function Workouts() {
             >
               {exercise}
             </button>
+
             <button
               type="button"
               onClick={() => {
-                toggleSetModal(exercise);
+                handleAddSet(exercise);
               }}
               className="px-5 "
             >
@@ -158,20 +182,20 @@ function Workouts() {
             </button>
             <button
               type="button"
-              onClick={async () => {
-                await handleDeleteWorkout(workouts[exercise][0].exercise_id);
-              }}
+              onClick={() =>
+                openDeleteConfirmation(workouts[exercise][0].exercise_id)
+              }
             >
               <i className="material-icons text-[30px] text-red-500">delete</i>
             </button>
             {selectedExercise === exercise && (
-              <div className="border-2 border-red-500 flex flex-wrap">
+              <div className="border-2 border-red-500">
                 {workouts[exercise].map((workout) => (
-                  <div key={workout.set_id} className="flex">
+                  <div key={workout.set_id} className="">
                     {editingSetId === workout.set_id ? (
                       <div className="flex flex-col">
                         <input
-                          className="text-red-500"
+                          className=""
                           type="number"
                           value={editFormData.reps}
                           onChange={(e) => {
@@ -182,7 +206,7 @@ function Workouts() {
                           }}
                         />
                         <input
-                          className="text-red-500"
+                          className=""
                           type="number"
                           value={editFormData.weight}
                           onChange={(e) => {
@@ -242,6 +266,12 @@ function Workouts() {
             )}
           </div>
         ))}
+        <ConfirmationModal
+          isOpen={isConfirmationModalOpen}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          message="Are you sure you want to delete this workout?"
+        />
       </div>
       <button
         className="absolute bottom-5 right-5 bg-slate-300 text-white font-bold rounded-full p-2 h-14 w-14"
@@ -262,14 +292,6 @@ function Workouts() {
         <WorkoutModal
           closeWorkoutModal={closeWorkoutModal}
           selectedDate={selectedDate}
-        />
-      )}
-
-      {openSetModal && (
-        <SetModal
-          toggleSetModal={toggleSetModal}
-          selectedDate={selectedDate}
-          selectedExercise={selectedExercise}
         />
       )}
     </div>

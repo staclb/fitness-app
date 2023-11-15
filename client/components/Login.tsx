@@ -15,6 +15,12 @@ import { userAuthStore } from '../zustand';
 
 // are you sure for when deleting a wholeworkout and sets
 
+// change text colors, add spacing between input boxes, get rid of labels
+// do the same on workouts, add default value => 0 if none entered
+
+// make nav bar sticky
+// consider what to do with date at the top, should prob make it sticky and accessible on workotus and progress
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
