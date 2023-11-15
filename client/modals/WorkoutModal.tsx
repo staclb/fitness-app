@@ -36,43 +36,37 @@ const WorkoutModal: React.FC<WorkoutModalProps> = ({
   };
   return (
     <div>
-      <div>
-        <button type="button" onClick={() => closeWorkoutModal()}>
-          <i className="material-icons text-[20px] text-red-500">cancel</i>
-        </button>
-      </div>
       <div className="flex flex-col">
         <form className="flex flex-col" onSubmit={handlePostWorkout}>
-          <label htmlFor="name" className="text-red-500">
-            Workout:
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </label>
-          <label htmlFor="weight" className="text-red-500">
-            Weight:
-            <input
-              type="number"
-              name="weight"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-            />
-          </label>
-          <label htmlFor="reps" className="text-red-500">
-            Reps:
-            <input
-              type="number"
-              name="reps"
-              value={reps}
-              onChange={(e) => setReps(e.target.value)}
-            />
-          </label>
-          <button type="submit">
-            <i className="material-icons text-[20px] text-red-500">save</i>
-          </button>
+          <input
+            className="w-24 h-7 rounded"
+            placeholder="Exercise"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            className="w-24 h-7 rounded"
+            placeholder="Weight"
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+          />
+          <input
+            className="w-24 h-7 rounded"
+            placeholder="Reps"
+            type="number"
+            value={reps}
+            onChange={(e) => setReps(e.target.value)}
+          />
+          <div className="flex justify-around w-24 h-7 rounded">
+            <button type="submit">
+              <i className="material-icons text-[20px] text-red-500">save</i>
+            </button>
+            <button type="button" onClick={() => closeWorkoutModal()}>
+              <i className="material-icons text-[20px] text-red-500">cancel</i>
+            </button>
+          </div>
         </form>
       </div>
     </div>

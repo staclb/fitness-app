@@ -25,12 +25,24 @@ export interface ConfirmationModalProps {
   isOpen: boolean;
   message: string;
 }
+export interface EditFormProps {
+  workout: {
+    setId: number;
+  };
+  editFormData: {
+    reps: string;
+    weight: string;
+  };
+  setEditFormData: (formData: { reps: string; weight: string }) => void;
+  handleSaveClick: (setId: number) => Promise<void>;
+  handleDeleteSet: (setId: number) => Promise<void>;
+}
 
 export interface WorkoutSet {
   reps: number;
   weight: number;
-  exercise_id: number;
-  set_id: number;
+  exerciseId: number;
+  setId: number;
 }
 
 export interface WorkoutsState {

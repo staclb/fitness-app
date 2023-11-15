@@ -11,6 +11,7 @@ import {
 // import SetModal from '../modals/SetModal';
 import { useWorkoutStore, userAuthStore } from '../zustand';
 import ConfirmationModal from '../modals/ConfirmationModal';
+import EditForm from '../components/EditForm';
 // import { postWorkout } from '../api/workoutData';
 
 type ValuePiece = Date | null;
@@ -22,7 +23,7 @@ function Workouts() {
   const [value, onChange] = useState<Value>(new Date());
   const [openWorkout, setOpenWorkout] = useState(false);
   const [openCalendar, setOpenCalendar] = useState(false);
-  // const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>({});
+  // const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number; exerciseId: number; setId: number }> }>({});
   const [selectedExercise, setSelectedExercise] = useState('');
   const [openSetModal, setOpenSetModal] = useState(false);
   // for editing weight + reps for a set
@@ -87,10 +88,10 @@ function Workouts() {
     }
   };
 
-  const handleDeleteSet = async (exerciseId: number) => {
+  const handleDeleteSet = async (setId: number) => {
     const unixtime = selectedDate.getTime();
     // console.log(unixtime);
-    const deleted = await deleteSet(exerciseId, token);
+    const deleted = await deleteSet(setId, token);
     if (deleted) {
       refreshWorkouts(unixtime, token);
     }
@@ -99,11 +100,10 @@ function Workouts() {
 
   // fix type for workout parameter
   const handleEditClick = (workout: any) => {
-    setEditingSetId(workout.set_id);
+    setEditingSetId(workout.setId);
     setEditFormData({ reps: workout.reps, weight: workout.weight });
   };
 
-  // fix type for workout parameter
   const handleSaveClick = async (setId: number) => {
     const updated = await updateSet(setId, editFormData, token);
     const unixtime = selectedDate.getTime();
@@ -113,7 +113,7 @@ function Workouts() {
     }
     // error case?
   };
-
+  // fix typing here
   const openDeleteConfirmation = (exerciseId: any) => {
     setWorkoutToDelete(exerciseId);
     setIsConfirmationModalOpen(true);
@@ -158,75 +158,65 @@ function Workouts() {
       >
         {currentDate(selectedDate)}
       </button>
-      <div className="px-4">
+      <div className="">
         {Object.keys(workouts).map((exercise: string) => (
-          <div key={exercise}>
-            <button
-              className="text-[30px] text-red-500"
-              onClick={() => {
-                handleExerciseClick(exercise);
-              }}
-              type="button"
-            >
-              {exercise}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                handleAddSet(exercise);
-              }}
-              className="px-5 "
-            >
-              <i className="material-icons text-[30px] text-red-500">add</i>
-            </button>
-            <button
-              type="button"
-              onClick={() =>
-                openDeleteConfirmation(workouts[exercise][0].exercise_id)
-              }
-            >
-              <i className="material-icons text-[30px] text-red-500">delete</i>
-            </button>
+          <div className="pl-4" key={exercise}>
+            <div className="flex justify-start">
+              <div className="flex flex-col justify-start">
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleAddSet(exercise);
+                  }}
+                  className="px-5 "
+                >
+                  <i className="material-icons text-[30px] text-red-500">add</i>
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    openDeleteConfirmation(workouts[exercise][0].exerciseId)
+                  }
+                >
+                  <i className="material-icons text-[30px] text-red-500">
+                    delete
+                  </i>
+                </button>
+              </div>
+              <button
+                className="text-[30px] text-red-500"
+                onClick={() => {
+                  handleExerciseClick(exercise);
+                }}
+                type="button"
+              >
+                {exercise}
+              </button>
+            </div>
             {selectedExercise === exercise && (
-              <div className="border-2 border-red-500">
+              <div className="border-1 border-red-500">
+                <div className="flex justify-start px-2">
+                  <span className="w-24 h-7 text-[15px] text-red-500 px-6">
+                    Reps
+                  </span>
+                  <span className="w-24 h-7 text-[15px] text-red-500">
+                    Weight
+                  </span>
+                </div>
                 {workouts[exercise].map((workout) => (
-                  <div key={workout.set_id} className="">
-                    {editingSetId === workout.set_id ? (
-                      <div className="flex flex-col">
-                        <input
-                          className=""
-                          type="number"
-                          value={editFormData.reps}
-                          onChange={(e) => {
-                            setEditFormData({
-                              ...editFormData,
-                              reps: e.target.value,
-                            });
-                          }}
-                        />
-                        <input
-                          className=""
-                          type="number"
-                          value={editFormData.weight}
-                          onChange={(e) => {
-                            setEditFormData({
-                              ...editFormData,
-                              weight: e.target.value,
-                            });
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={async () => {
-                            await handleSaveClick(workout.set_id);
-                          }}
-                        >
-                          <i className="material-icons text-[20px] text-red-500">
-                            save
-                          </i>
-                        </button>
-                      </div>
+                  <div
+                    key={workout.setId}
+                    className="border-1 border-red-500 flex flex-row"
+                  >
+                    {editingSetId === workout.setId ? (
+                      // separated into another component
+                      <EditForm
+                        workout={workout}
+                        editFormData={editFormData}
+                        setEditFormData={setEditFormData}
+                        handleSaveClick={handleSaveClick}
+                        handleDeleteSet={handleDeleteSet}
+                      />
                     ) : (
                       <div>
                         <button
@@ -236,7 +226,7 @@ function Workouts() {
                           }}
                           type="button"
                         >
-                          Reps: {workout.reps}
+                          {workout.reps}
                         </button>
                         <button
                           className="px-8 text-[15px] text-red-500"
@@ -245,21 +235,10 @@ function Workouts() {
                           }}
                           type="button"
                         >
-                          Weight: {workout.weight}
+                          {workout.weight}
                         </button>
                       </div>
                     )}
-                    <button
-                      onClick={async () => {
-                        await handleDeleteSet(workout.set_id);
-                      }}
-                      className="text-[40px]"
-                      type="button"
-                    >
-                      <i className="material-icons text-[20px] text-red-500">
-                        delete
-                      </i>
-                    </button>
                   </div>
                 ))}
               </div>

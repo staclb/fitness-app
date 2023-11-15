@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 // import './style.css'
 import { Routes, Route, useLocation } from 'react-router-dom';
 import NavBar from './containers/NavBar';
-import Workouts from './components/Workouts';
+import Workouts from './containers/Workouts';
 import Progress from './components/Progress';
 import Login from './components/Login';
 import SignUp from './components/SignUp';

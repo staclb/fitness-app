@@ -12,7 +12,7 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
     const sortedData: WorkoutsState = {};
     // an object with keys that are the exercise names, with arrays as properties, that contain objects which are each set
     Object.entries(data).forEach(([exercise, sets]) => {
-      sortedData[exercise] = [...sets].sort((a, b) => a.set_id - b.set_id)
+      sortedData[exercise] = [...sets].sort((a, b) => a.setId - b.setId)
     });
     set((state) => ({ workouts: sortedData }));
   }

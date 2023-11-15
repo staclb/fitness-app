@@ -32,6 +32,7 @@ const SignUp = () => {
       <form onSubmit={handleLogin}>
         <div className="pb-2">
           <input
+            className="rounded"
             placeholder="Username"
             type="text"
             id="username"
@@ -42,6 +43,7 @@ const SignUp = () => {
         </div>
         <div className="pb-2">
           <input
+            className="rounded"
             placeholder="Email"
             type="text"
             id="email"
@@ -52,6 +54,7 @@ const SignUp = () => {
         </div>
         <div className="pb-2">
           <input
+            className="rounded"
             placeholder="Password"
             type="password"
             id="password"

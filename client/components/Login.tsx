@@ -21,6 +21,8 @@ import { userAuthStore } from '../zustand';
 // make nav bar sticky
 // consider what to do with date at the top, should prob make it sticky and accessible on workotus and progress
 
+// what about workout modal, is it needed?
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -53,6 +55,7 @@ const Login = () => {
       <form onSubmit={handleLogin}>
         <div className="pb-2">
           <input
+            className="rounded"
             placeholder="Username"
             type="text"
             value={username}
@@ -61,6 +64,7 @@ const Login = () => {
         </div>
         <div className="pb-2">
           <input
+            className="rounded"
             placeholder="Password"
             type="password"
             value={password}
