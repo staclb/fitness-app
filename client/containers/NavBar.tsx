@@ -17,10 +17,10 @@ const NavBar = () => {
   };
 
   return (
-    <div className="flex justify-around items-end bg-slate-300 text-white font-bold py-4 px-4 rounded">
+    <div className="flex justify-around items-end bg-gray-500 text-white font-bold py-4 px-4 rounded sticky bottom-0 z-10">
       <button
         type="button"
-        className="material-icons text-[30px]"
+        className="material-icons text-[30px] hover:bg-gray-400 rounded"
         onClick={() => {
           navigate('/Workouts');
         }}
@@ -29,7 +29,7 @@ const NavBar = () => {
       </button>
       <button
         type="button"
-        className="material-icons text-[30px]"
+        className="material-icons text-[30px] hover:bg-gray-400 rounded"
         onClick={() => {
           navigate('/Progress');
         }}
@@ -38,7 +38,7 @@ const NavBar = () => {
       </button>
       <button
         type="button"
-        className="material-icons text-[30px]"
+        className="material-icons text-[30px] hover:bg-gray-400 rounded"
         onClick={() => setIsLogoutModalOpen(true)} // Open the logout confirmation modal
       >
         logout

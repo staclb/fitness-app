@@ -18,10 +18,13 @@ import { userAuthStore } from '../zustand';
 // change text colors, add spacing between input boxes, get rid of labels
 // do the same on workouts, add default value => 0 if none entered
 
-// make nav bar sticky
+// make add a wk button sticky => its reliant on calendar modal loading? and next to workouts when there are some
 // consider what to do with date at the top, should prob make it sticky and accessible on workotus and progress
 
 // what about workout modal, is it needed?
+
+// resuable buttons => need to modularize then import them?
+// cancel button, save button
 
 const Login = () => {
   const [username, setUsername] = useState('');

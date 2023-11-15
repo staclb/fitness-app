@@ -21,7 +21,8 @@ function App(): ReactElement {
     location.pathname !== '/' && location.pathname !== '/SignUp';
 
   return (
-    <div className="flex flex-col h-screen bg-slate-950">
+    // changed h-screen to min, to account fopr content overflow
+    <div className="flex flex-col min-h-screen bg-slate-950">
       <div className="flex-grow">
         <Routes>
           <Route path="/Workouts" element={<AuthCheckedWorkouts />} />

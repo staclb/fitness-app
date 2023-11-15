@@ -25,7 +25,7 @@ function Workouts() {
   const [openCalendar, setOpenCalendar] = useState(false);
   // const [workouts, setWorkouts] = useState<{ [exercise: string]: Array<{ reps: number; weight: number; exerciseId: number; setId: number }> }>({});
   const [selectedExercise, setSelectedExercise] = useState('');
-  const [openSetModal, setOpenSetModal] = useState(false);
+  // const [openSetModal, setOpenSetModal] = useState(false);
   // for editing weight + reps for a set
   const [editingSetId, setEditingSetId] = useState(null);
   const [editFormData, setEditFormData] = useState({ reps: '', weight: '' });
@@ -35,7 +35,9 @@ function Workouts() {
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
   const { token } = userAuthStore();
+  // console.log('workouts: ', workouts)
 
+  // workout modal functions => might rework
   const openWorkoutModal = () => {
     setOpenWorkout(true);
   };
@@ -43,13 +45,15 @@ function Workouts() {
   const closeWorkoutModal = () => {
     setOpenWorkout(false);
   };
-
+  // Calendar modal functions
   const openCalendarModal = () => {
     setOpenCalendar(true);
   };
-
   const closeCalendarModal = (date: Date) => {
     setSelectedDate(date);
+    setOpenCalendar(false);
+  };
+  const cancelCalendarModal = () => {
     setOpenCalendar(false);
   };
 
@@ -105,12 +109,13 @@ function Workouts() {
   };
 
   const handleSaveClick = async (setId: number) => {
-    const updated = await updateSet(setId, editFormData, token);
+    // const updated =
+    await updateSet(setId, editFormData, token);
     const unixtime = selectedDate.getTime();
-    if (updated) {
-      setEditingSetId(null);
-      refreshWorkouts(unixtime, token);
-    }
+    // if (updated) {
+    setEditingSetId(null);
+    refreshWorkouts(unixtime, token);
+    // }
     // error case?
   };
   // fix typing here
@@ -150,15 +155,15 @@ function Workouts() {
   }, [selectedDate, refreshWorkouts]);
 
   return (
-    <div className="flex flex-col relative h-full">
+    <div className="flex flex-col relative h-screen">
       <button
-        className="bg-slate-300 text-white font-bold py-2 px-4 rounded text-[30px]"
+        className="bg-gray-500 text-white font-bold py-2 px-4 rounded text-[30px] sticky top-0 z-10"
         type="button"
         onClick={openCalendarModal}
       >
-        {currentDate(selectedDate)}
+        <div className="hover:text-gray-400">{currentDate(selectedDate)}</div>
       </button>
-      <div className="">
+      <div className="pt-3">
         {Object.keys(workouts).map((exercise: string) => (
           <div className="pl-4" key={exercise}>
             <div className="flex justify-start">
@@ -168,23 +173,26 @@ function Workouts() {
                   onClick={() => {
                     handleAddSet(exercise);
                   }}
-                  className="px-5 "
+                  className="px-5"
                 >
-                  <i className="material-icons text-[30px] text-red-500">add</i>
+                  <i className="material-icons text-[30px] text-red-500 hover:bg-slate-900 rounded">
+                    add
+                  </i>
                 </button>
                 <button
                   type="button"
                   onClick={() =>
                     openDeleteConfirmation(workouts[exercise][0].exerciseId)
                   }
+                  className="px-5"
                 >
-                  <i className="material-icons text-[30px] text-red-500">
+                  <i className="material-icons text-[30px] text-red-500 hover:bg-slate-900 rounded">
                     delete
                   </i>
                 </button>
               </div>
               <button
-                className="text-[30px] text-red-500"
+                className="text-[30px] text-red-500 hover:underline hover:underline-offset-2 hover:text-red-600"
                 onClick={() => {
                   handleExerciseClick(exercise);
                 }}
@@ -253,20 +261,30 @@ function Workouts() {
         />
       </div>
       <button
-        className="absolute bottom-5 right-5 bg-slate-300 text-white font-bold rounded-full p-2 h-14 w-14"
+        className="fixed bottom-20 right-5 bg-gray-500 text-white font-bold rounded-full p-2 h-14 w-14 hover:bg-gray-400 rounded"
         onClick={openWorkoutModal}
         type="button"
       >
         <i className="material-icons text-[40px]">add</i>
       </button>
       {openCalendar && (
-        <Calendar
-          onChange={onChange}
-          defaultValue={selectedDate}
-          onClickDay={closeCalendarModal}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-center flex-col">
+          <div className="pb-2">
+            <button
+              type="button"
+              onClick={() => cancelCalendarModal()}
+              className="bg-red-500 hover:bg-white text-black hover:text-red-500 font-bold p-2 rounded-full inline-flex items-center justify-center w-10 h-10"
+            >
+              <span className="text-xl font-bold">X</span>
+            </button>
+          </div>
+          <Calendar
+            onChange={onChange}
+            defaultValue={selectedDate}
+            onClickDay={closeCalendarModal}
+          />
+        </div>
       )}
-
       {openWorkout && (
         <WorkoutModal
           closeWorkoutModal={closeWorkoutModal}
