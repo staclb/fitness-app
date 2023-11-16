@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import WorkoutModal from '../modals/WorkoutModal';
+// import WorkoutModal from '../modals/WorkoutModal';
+import { useNavigate } from 'react-router-dom';
 import {
   updateSet,
   deleteWorkout,
@@ -35,6 +36,7 @@ function Workouts() {
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
   const { token } = userAuthStore();
+  const navigate = useNavigate();
   // console.log('workouts: ', workouts)
 
   // workout modal functions => might rework
@@ -262,7 +264,7 @@ function Workouts() {
       </div>
       <button
         className="fixed bottom-20 right-5 bg-gray-500 text-white font-bold rounded-full p-2 h-14 w-14 hover:bg-gray-400 rounded"
-        onClick={openWorkoutModal}
+        onClick={() => navigate('/search')}
         type="button"
       >
         <i className="material-icons text-[40px]">add</i>
@@ -285,12 +287,12 @@ function Workouts() {
           />
         </div>
       )}
-      {openWorkout && (
+      {/* {openWorkout && (
         <WorkoutModal
           closeWorkoutModal={closeWorkoutModal}
           selectedDate={selectedDate}
         />
-      )}
+      )} */}
     </div>
   );
 }

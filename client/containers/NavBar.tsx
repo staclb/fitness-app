@@ -22,7 +22,7 @@ const NavBar = () => {
         type="button"
         className="material-icons text-[30px] hover:bg-gray-400 rounded"
         onClick={() => {
-          navigate('/Workouts');
+          navigate('/workouts');
         }}
       >
         fitness_center
@@ -31,7 +31,7 @@ const NavBar = () => {
         type="button"
         className="material-icons text-[30px] hover:bg-gray-400 rounded"
         onClick={() => {
-          navigate('/Progress');
+          navigate('/progress');
         }}
       >
         signal_cellular_alt

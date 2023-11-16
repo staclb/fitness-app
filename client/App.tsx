@@ -7,6 +7,7 @@ import Progress from './components/Progress';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import authCheck from './containers/authCheck';
+import Search from './components/Search';
 
 // setup from docs
 function App(): ReactElement {
@@ -25,10 +26,11 @@ function App(): ReactElement {
     <div className="flex flex-col min-h-screen bg-slate-950">
       <div className="flex-grow">
         <Routes>
-          <Route path="/Workouts" element={<AuthCheckedWorkouts />} />
-          <Route path="/Progress" element={<AuthCheckedProgress />} />
+          <Route path="/workouts" element={<AuthCheckedWorkouts />} />
+          <Route path="/progress" element={<AuthCheckedProgress />} />
           <Route path="/" element={<Login />} />
-          <Route path="/SignUp" element={<SignUp />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
       </div>
       {showNavBar && <NavBar />}

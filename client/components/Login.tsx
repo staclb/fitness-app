@@ -3,29 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { login } from '../api/workoutData';
 import { userAuthStore } from '../zustand';
 
-// button for saving is the same in places => might import
-// consider modularizing in general
-// theme for tailwind => decide on colors, text, font, etc
-// centralize errors on FE, for example when a repinse could be empty/und?
-// possibly on BE too => cover all async func's and actions
-
-// look into build problems
-
-// error boundaries in React to handle errors in UI components
-
-// are you sure for when deleting a wholeworkout and sets
-
-// change text colors, add spacing between input boxes, get rid of labels
-// do the same on workouts, add default value => 0 if none entered
-
-// make add a wk button sticky => its reliant on calendar modal loading? and next to workouts when there are some
-// consider what to do with date at the top, should prob make it sticky and accessible on workotus and progress
-
-// what about workout modal, is it needed?
-
-// resuable buttons => need to modularize then import them?
-// cancel button, save button
-
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -43,7 +20,7 @@ const Login = () => {
 
       if (response.message === 'success') {
         setToken(response.token);
-        navigate('/Workouts');
+        navigate('/workouts');
       } else {
         setErrorMessage(response.error);
       }
@@ -82,7 +59,7 @@ const Login = () => {
             className="text-red-500"
             type="submit"
             onClick={() => {
-              navigate('/SignUp');
+              navigate('/signUp');
             }}
           >
             Go to SignUp
