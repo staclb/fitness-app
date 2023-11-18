@@ -60,6 +60,20 @@ export interface AuthState {
   setToken: (token: string | null) => void;
 }
 
-// export interface WrappedComponent {
+export interface Exercises {
+  name: string;
+  type: string;
+  muscle: string;
+  equipment: string;
+  difficulty: string;
+  instructions: string;
+}
 
-// }
+export interface ExercisesState {
+  exercises: Exercises[]; // Define exercises as an array of Exercise objects
+}
+
+export interface ExercisesStore {
+  exercises: ExercisesState;
+  setExercises: (exercises: ExercisesState) => void;
+}

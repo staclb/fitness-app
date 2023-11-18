@@ -19,7 +19,7 @@ function App(): ReactElement {
   const location = useLocation();
 
   const showNavBar =
-    location.pathname !== '/' && location.pathname !== '/SignUp';
+    location.pathname !== '/' && location.pathname !== '/signUp';
 
   return (
     // changed h-screen to min, to account fopr content overflow

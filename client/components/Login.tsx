@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/workoutData';
-import { userAuthStore } from '../zustand';
+import { useAuthStore } from '../zustand';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -9,7 +9,7 @@ const Login = () => {
   // messages for FE from backend
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { setToken } = userAuthStore();
+  const { setToken } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {

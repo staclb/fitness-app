@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { WorkoutModalProps } from '../../types/types';
 import { postWorkout } from '../api/workoutData';
-import { useWorkoutStore, userAuthStore } from '../zustand';
+import { useWorkoutStore, useAuthStore } from '../zustand';
 
 const WorkoutModal: React.FC<WorkoutModalProps> = ({
   closeWorkoutModal,
   selectedDate,
 }) => {
   const { refreshWorkouts } = useWorkoutStore();
-  const { token } = userAuthStore();
+  const { token } = useAuthStore();
   // added states due to event typing
   const [weight, setWeight] = useState('');
   const [reps, setReps] = useState('');

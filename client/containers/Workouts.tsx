@@ -10,7 +10,7 @@ import {
   postWorkout,
 } from '../api/workoutData';
 // import SetModal from '../modals/SetModal';
-import { useWorkoutStore, userAuthStore } from '../zustand';
+import { useWorkoutStore, useAuthStore } from '../zustand';
 import ConfirmationModal from '../modals/ConfirmationModal';
 import EditForm from '../components/EditForm';
 // import { postWorkout } from '../api/workoutData';
@@ -35,7 +35,7 @@ function Workouts() {
   const [workoutToDelete, setWorkoutToDelete] = useState(null);
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
-  const { token } = userAuthStore();
+  const { token } = useAuthStore();
   const navigate = useNavigate();
   // console.log('workouts: ', workouts)
 
@@ -141,6 +141,10 @@ function Workouts() {
   // perhaps not needed, could combine with confirm function
   const handleCancelDelete = () => {
     setIsConfirmationModalOpen(false);
+  };
+
+  const handleSearchExerise = () => {
+    navigate('/search', { state: { selectedDate } });
   };
 
   // for fetching workout data
@@ -264,7 +268,7 @@ function Workouts() {
       </div>
       <button
         className="fixed bottom-20 right-5 bg-gray-500 text-white font-bold rounded-full p-2 h-14 w-14 hover:bg-gray-400 rounded"
-        onClick={() => navigate('/search')}
+        onClick={handleSearchExerise}
         type="button"
       >
         <i className="material-icons text-[40px]">add</i>

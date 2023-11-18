@@ -53,7 +53,7 @@ const authController = {
   },
   userLogin: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('hi')
+      console.log('hi ape')
       const { username, password } = req.body;
       const checkUserQuery = `
         SELECT * 

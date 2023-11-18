@@ -1,14 +1,13 @@
-import React, { useEffect, ComponentType } from 'react'
+import React, { useEffect, ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 // import { WrappedComponent } from '../../types/types';
-import { userAuthStore } from '../zustand';
-
+import { useAuthStore } from '../zustand';
 
 const authCheck = (WrappedComponent: ComponentType) => {
   return (): React.ReactElement => {
     const navigate = useNavigate();
-    const { token, setToken } = userAuthStore();
+    const { token, setToken } = useAuthStore();
 
     useEffect(() => {
       if (token) {
@@ -34,6 +33,6 @@ const authCheck = (WrappedComponent: ComponentType) => {
     // Return the wrapped component
     return <WrappedComponent />;
   };
-}
+};
 
-export default authCheck
+export default authCheck;
