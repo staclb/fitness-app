@@ -28,7 +28,9 @@ export const postWorkout = async (data: any, token: string | null) => {
       },
       body: JSON.stringify(data),
     });
-    return response;
+    const setId = await response.json();
+    // console.log('res: ', setId)
+    return setId.setId;
   } catch (error) {
     console.log('Error posting a workout');
     return null;

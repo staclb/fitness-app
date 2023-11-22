@@ -10,7 +10,7 @@ router.post(
   authController.verifyToken,
   workoutController.postWorkout,
   (req: Request, res: Response) => {
-    res.status(200).json({ message: 'success' });
+    res.status(200).json({ setId: res.locals.setId });
   },
 );
 

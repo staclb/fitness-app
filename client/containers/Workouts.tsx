@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 // import WorkoutModal from '../modals/WorkoutModal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   updateSet,
   deleteWorkout,
@@ -12,7 +12,7 @@ import {
 // import SetModal from '../modals/SetModal';
 import { useWorkoutStore, useAuthStore } from '../zustand';
 import ConfirmationModal from '../modals/ConfirmationModal';
-import EditForm from '../components/EditForm';
+import EditForm from '../modals/EditForm';
 // import { postWorkout } from '../api/workoutData';
 
 type ValuePiece = Date | null;
@@ -37,16 +37,17 @@ function Workouts() {
   const { workouts, refreshWorkouts } = useWorkoutStore();
   const { token } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   // console.log('workouts: ', workouts)
 
   // workout modal functions => might rework
-  const openWorkoutModal = () => {
-    setOpenWorkout(true);
-  };
+  // const openWorkoutModal = () => {
+  //   setOpenWorkout(true);
+  // };
 
-  const closeWorkoutModal = () => {
-    setOpenWorkout(false);
-  };
+  // const closeWorkoutModal = () => {
+  //   setOpenWorkout(false);
+  // };
   // Calendar modal functions
   const openCalendarModal = () => {
     setOpenCalendar(true);
@@ -144,6 +145,7 @@ function Workouts() {
   };
 
   const handleSearchExerise = () => {
+    // should only pass serializable data, not functions
     navigate('/search', { state: { selectedDate } });
   };
 
@@ -158,7 +160,13 @@ function Workouts() {
       }
     };
     fetchData();
-  }, [selectedDate, refreshWorkouts]);
+
+    if (location.state && 'newSetId' in location.state) {
+      console.log('test:', location.state.exerciseName);
+      setEditingSetId(location.state.newSetId);
+      handleExerciseClick(location.state.exerciseName);
+    }
+  }, [selectedDate, refreshWorkouts, location.state]);
 
   return (
     <div className="flex flex-col relative h-screen">

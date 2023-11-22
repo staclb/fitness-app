@@ -36,3 +36,4 @@
 
 // show the 10 names, then user clicks 'see more', send query to backend again with offset increased
 // send whole objects to FE, FE only displays names, but whole thing is saved on zustand store, when user selects one, save the name and instructions(no table slot yet in db)
+

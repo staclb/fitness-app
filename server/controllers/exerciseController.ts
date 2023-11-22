@@ -7,10 +7,10 @@ const exerciseController = {
   searchExercise: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { muscle, offset, type, name, difficulty } = req.query;
-      console.log('muscle: ', muscle);
-      console.log('offset:', offset);
-      console.log('type:', type);
-      console.log('name:', name);
+      // console.log('muscle: ', muscle);
+      // console.log('offset:', offset);
+      // console.log('type:', type);
+      // console.log('name:', name);
       const apiKey = process.env.NINJA_APIKEY || '';
 
       const queryParams = [];
@@ -34,7 +34,7 @@ const exerciseController = {
       const url = `https://api.api-ninjas.com/v1/exercises?${queryParams.join(
         '&',
       )}`;
-      console.log(url)
+      // console.log(url)
       const options = {
         method: 'GET',
         headers: {
@@ -44,7 +44,7 @@ const exerciseController = {
       // console.log(url);
       const response = await fetch(url, options);
       const data = await response.json();
-      console.log(data)
+      // console.log(data)
       // const exerciseNames = data.map((exercise: any) => exercise.name);
       // console.log(exerciseNames);
       res.locals.data = data;

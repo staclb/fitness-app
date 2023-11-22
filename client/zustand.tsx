@@ -33,7 +33,7 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
     sortedExercises.forEach(([exercise, sets]) => {
       orderedData[exercise] = sets;
     });
-    console.log('sortedData: ', sortedData);
+    // console.log('sortedData: ', sortedData);
 
     set((state) => ({ workouts: orderedData }));
   },

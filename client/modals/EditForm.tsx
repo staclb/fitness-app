@@ -37,7 +37,7 @@ const EditForm = ({
         <div className="flex flex-row items-center space-x-2">
           <button
             className="w-24 h-7"
-            type="button"
+            type="submit"
             onClick={() => handleSaveClick(workout.setId)}
           >
             <i className="material-icons text-[20px] text-red-500">save</i>

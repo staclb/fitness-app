@@ -51,12 +51,13 @@ const workoutController = {
       const insertSetQuery = `
           INSERT into sets (exercise_id, reps, weight)
           VALUES ($1, $2, $3)
+          RETURNING set_id;
         `;
       const setValues = [result, reps, weight];
       // console.log('setValues', setValues)
-      await query(insertSetQuery, setValues);
-      // console.log(ape)
-
+      const setId = await query(insertSetQuery, setValues);
+      // console.log('setId: ', setId.rows[0].set_id)
+      res.locals.setId = setId.rows[0].set_id
       return next();
     } catch (error) {
       return next({

@@ -20,15 +20,15 @@ const Search = () => {
   };
 
   const handleSearch = async (
-    name: string,
+    exerciseName: string,
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
     // console.log('name: ', name);
     // console.log(name)
     try {
-      const response = await fetchExerices(name, token);
-      console.log('response: ', response.exercises);
+      const response = await fetchExerices(exerciseName, token);
+      // console.log('response: ', response.exercises);
       if (response) {
         setExercises(response.exercises);
       }
@@ -38,7 +38,7 @@ const Search = () => {
   };
 
   const handlePostWorkout = async (exerciseName: string) => {
-    console.log('hi');
+    // console.log('hi');
     // console.log(name)
     const { selectedDate } = location.state;
     const unixtime = selectedDate.getTime();
@@ -50,9 +50,14 @@ const Search = () => {
       unixtime,
     };
     try {
-      await postWorkout(workoutData, token);
+      const response = await postWorkout(workoutData, token);
       await refreshWorkouts(unixtime, token);
-      navigate('/workouts');
+      // have to add selected  exercise and open the set edit modal on that set, so possibly the set id
+      // console.log('res in handle post workout in search: ', response);
+      // setEditingSetId(response)
+      navigate('/workouts', {
+        state: { newSetId: response, exerciseName },
+      });
     } catch (error) {
       console.log('Error posting workout data');
     }
