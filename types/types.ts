@@ -28,6 +28,9 @@ export interface ConfirmationModalProps {
 export interface EditFormProps {
   workout: {
     setId: number;
+    // exerciseID: number;
+    // reps: number;
+    // weight: number;
   };
   editFormData: {
     reps: string;
@@ -37,6 +40,13 @@ export interface EditFormProps {
   handleSaveClick: (setId: number) => Promise<void>;
   handleDeleteSet: (setId: number) => Promise<void>;
 }
+
+// export interface Workout {
+//   setId: number;
+//   exerciseID: number;
+//   reps: string;
+//   weight: string;
+// }
 
 export interface WorkoutSet {
   reps: number;

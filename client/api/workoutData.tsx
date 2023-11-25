@@ -29,7 +29,6 @@ export const postWorkout = async (data: any, token: string | null) => {
       body: JSON.stringify(data),
     });
     const setId = await response.json();
-    // console.log('res: ', setId)
     return setId.setId;
   } catch (error) {
     console.log('Error posting a workout');
@@ -142,7 +141,7 @@ export const fetchExerices = async (
   token: string | null,
 ) => {
   // console.log('data: ', muscle, offset, type, name, difficulty, token);
-  console.log('name: ', name);
+  // console.log('name: ', name);
   try {
     const response = await fetch(
       // `/api/workout/getByDay?muscle=${muscle}&offset=${offset}&type=${type}&name=${name}&difficulty=${difficulty}`,

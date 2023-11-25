@@ -1,4 +1,5 @@
-// button for saving is the same in places => might import
+// resuable buttons => need to modularize then import them?
+  // cancel button, save button
 // consider modularizing in general
 // theme for tailwind => decide on colors, text, font, etc
 
@@ -9,15 +10,6 @@
 
 // error boundaries in React to handle errors in UI components
 
-// resuable buttons => need to modularize then import them?
-  // cancel button, save button
-
-// workout modal changes
-// bring in api for user to select exercise name and that name is sent to backend => so user types into a search bar and that narrows down selection
-// default 0 entry for reps and weight if not provided by user and they save, if a workout is selected
-// data flow => user clicks button => redirected to another page with search bar and full exercise list, maybe genres/body parts => user clicks one adn that is what is sent to backend
-// => backend creates an entry in the database with values for 0 in each spot for reps and weight, 
-// FE refreshes when user saves the name and opens up the edit form for the new set just added under the new exercise
 
 // lazy loading for not having to fetch ALL exercise whe nthe user loads in just some
 // debouncing for only searching when the suer is done typing => delay of a second maybe after the user is done typing, then search
@@ -35,5 +27,5 @@
 // spacing between end of screen and workouts, between exercises, and button positioning
 
 // show the 10 names, then user clicks 'see more', send query to backend again with offset increased
-// send whole objects to FE, FE only displays names, but whole thing is saved on zustand store, when user selects one, save the name and instructions(no table slot yet in db)
+// instructions for workouts??
 
