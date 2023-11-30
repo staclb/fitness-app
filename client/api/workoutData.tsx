@@ -28,7 +28,8 @@ export const postWorkout = async (data: any, token: string | null) => {
       },
       body: JSON.stringify(data),
     });
-    return response;
+    const setId = await response.json();
+    return setId.setId;
   } catch (error) {
     console.log('Error posting a workout');
     return null;
@@ -127,6 +128,36 @@ export const signUp = async (
     return data;
   } catch (error) {
     console.log('Error logging in');
+    return null;
+  }
+};
+
+export const fetchExerices = async (
+  // muscle: any,
+  // offset: any,
+  // type: any,
+  name: string,
+  // difficulty: any,
+  token: string | null,
+) => {
+  // console.log('data: ', muscle, offset, type, name, difficulty, token);
+  // console.log('name: ', name);
+  try {
+    const response = await fetch(
+      // `/api/workout/getByDay?muscle=${muscle}&offset=${offset}&type=${type}&name=${name}&difficulty=${difficulty}`,
+      `/api/exercise/search?name=${name}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const data = await response.json();
+    // console.log(data)
+    return data;
+  } catch (error) {
+    console.log('Error fetching workouts by day');
     return null;
   }
 };

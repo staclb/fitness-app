@@ -44,7 +44,7 @@
 //           "name": "curl",
 //           "weight": 25,
 //           "reps": 12,
-//           "user_id": 1,
+//           "userId": 1,
 //           "unixtime": new Date().getTime()
 //         })
 //         console.log(responce.statusCode)

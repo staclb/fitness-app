@@ -11,29 +11,48 @@ export interface workoutController {
 export interface WorkoutModalProps {
   closeWorkoutModal: () => void;
   selectedDate: Date;
-  // using context can help avoid this line below
-  // setWorkouts: React.Dispatch<React.SetStateAction<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>>;
 }
 
 export interface SetModalProps {
   toggleSetModal: (exercise: string) => void;
   selectedDate: Date;
-  // setWorkouts: React.Dispatch<React.SetStateAction<{ [exercise: string]: Array<{ reps: number; weight: number; exercise_id: number; set_id: number }> }>>;
-  // set_id: number
   selectedExercise: string;
 }
 
-// export interface Workouts {
-//   // id: number;
-//   reps: number;
-//   weight: number;
+export interface ConfirmationModalProps {
+  onConfirm: () => void;
+  onCancel: () => void;
+  isOpen: boolean;
+  message: string;
+}
+export interface EditFormProps {
+  workout: {
+    setId: number;
+    // exerciseID: number;
+    // reps: number;
+    // weight: number;
+  };
+  editFormData: {
+    reps: string;
+    weight: string;
+  };
+  setEditFormData: (formData: { reps: string; weight: string }) => void;
+  handleSaveClick: (setId: number) => Promise<void>;
+  handleDeleteSet: (setId: number) => Promise<void>;
+}
+
+// export interface Workout {
+//   setId: number;
+//   exerciseID: number;
+//   reps: string;
+//   weight: string;
 // }
 
 export interface WorkoutSet {
   reps: number;
   weight: number;
-  exercise_id: number;
-  set_id: number;
+  exerciseId: number;
+  setId: number;
 }
 
 export interface WorkoutsState {
@@ -51,6 +70,20 @@ export interface AuthState {
   setToken: (token: string | null) => void;
 }
 
-// export interface WrappedComponent {
+export interface Exercises {
+  name: string;
+  type: string;
+  muscle: string;
+  equipment: string;
+  difficulty: string;
+  instructions: string;
+}
 
-// }
+export interface ExercisesState {
+  exercises: Exercises[]; // Define exercises as an array of Exercise objects
+}
+
+export interface ExercisesStore {
+  exercises: ExercisesState;
+  setExercises: (exercises: ExercisesState) => void;
+}

@@ -6,6 +6,7 @@ const workoutController = {
     try {
       const { name, weight, reps, unixtime } = req.body;
       const { userId } = res.locals.decodedToken;
+      // console.log(userId)
       // rep code from postWorkout function => might need to import from anotehr file
       const workoutDate = new Date(unixtime);
 
@@ -37,20 +38,26 @@ const workoutController = {
           RETURNING exercise_id;
         `;
         const exerciseValues = [userId, name, unixtime];
+        // console.log('exerciseValues', exerciseValues)
         const insertWorkoutResult = await query(
           insertExerciseQuery,
           exerciseValues,
         );
+        // console.log('insertWorkoutResult', insertWorkoutResult)
         result = insertWorkoutResult.rows[0].exercise_id;
+        // console.log('result', result)
       }
 
       const insertSetQuery = `
           INSERT into sets (exercise_id, reps, weight)
           VALUES ($1, $2, $3)
+          RETURNING set_id;
         `;
       const setValues = [result, reps, weight];
-      await query(insertSetQuery, setValues);
-
+      // console.log('setValues', setValues)
+      const setId = await query(insertSetQuery, setValues);
+      // console.log('setId: ', setId.rows[0].set_id)
+      res.locals.setId = setId.rows[0].set_id
       return next();
     } catch (error) {
       return next({
@@ -64,7 +71,7 @@ const workoutController = {
     try {
       const { unixtime } = req.query;
       // user selects a day => change to unix time, select all exercises that fall under that day by unix  time in table
-      // attach the exercise_name to the sets that have a matching exercise_id; each set has a reps and weight
+      // attach the exerciseName to the sets that have a matching exerciseId; each set has a reps and weight
       // need unix time from start and end of the day that FE sends
       const { userId } = res.locals.decodedToken;
       // date obj needs an explicit type => number
@@ -94,8 +101,8 @@ const workoutController = {
       // Process the rawData into the desired format.
       const parsedData: {
         [key: string]: {
-          exercise_id: number;
-          set_id: number;
+          exerciseId: number;
+          setId: number;
           reps: number;
           weight: number;
         }[];
@@ -106,8 +113,8 @@ const workoutController = {
           parsedData[row.exercise_name] = [];
         }
         parsedData[row.exercise_name].push({
-          exercise_id: row.exercise_id,
-          set_id: row.set_id,
+          exerciseId: row.exercise_id,
+          setId: row.set_id,
           reps: row.reps,
           weight: Number(row.weight), // Parse the weight as a number
         });

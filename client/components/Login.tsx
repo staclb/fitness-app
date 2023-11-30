@@ -1,43 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../api/workoutData';
-import { userAuthStore } from '../zustand';
-
-// button for saving is the same in places => might import
-// consider modularizing in general
-// theme for tailwind => decide on colors, text, font, etc
-// centralize errors on FE, for example when a repinse could be empty/und?
-// possibly on BE too => cover all async func's and actions
-
-// signout btton on top left => maybe a side bar with three lines
-
-// look into build problems
-
-// error boundaries in React to handle errors in UI components
-
-// continue fixing TS errors
+import { useAuthStore } from '../zustand';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  // messages for FE from backend
   const [errorMessage, setErrorMessage] = useState('');
 
-  const { setToken } = userAuthStore();
+  const { setToken } = useAuthStore();
   const navigate = useNavigate();
 
-  // fix any event typing
-  const handleLogin = async (event: any) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    // prevent reload of the page from form canceling
     event.preventDefault();
     try {
       const response = await login(username, password);
 
-      // login bug?
-
-      if (response) {
+      if (response.message === 'success') {
         setToken(response.token);
-        navigate('/Workouts');
+        navigate('/workouts');
       } else {
-        setErrorMessage('Login failed');
+        setErrorMessage(response.error);
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -48,39 +33,39 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleLogin}>
-        <div>
-          <label className="text-red-500">Username:</label>
+        <div className="pb-2">
           <input
-            className="text-red-500"
+            className="rounded"
+            placeholder="Username"
             type="text"
-            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-        <div>
-          <label className="text-red-500">Password:</label>
+        <div className="pb-2">
           <input
-            className="text-red-500"
-            type="text"
-            id="password"
+            className="rounded"
+            placeholder="Password"
+            type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button className="text-red-500" type="submit">
-          <i className="material-icons text-[20px] text-red-500">save</i>
-        </button>
-        <button
-          className="text-red-500"
-          type="submit"
-          onClick={() => {
-            navigate('/SignUp');
-          }}
-        >
-          SignUp
-        </button>
-        {errorMessage && <p>{errorMessage}</p>}
+        <div className="flex justify-around">
+          <button className="text-red-500" type="submit">
+            <i className="material-icons text-[20px] text-red-500">login</i>
+          </button>
+          <button
+            className="text-red-500"
+            type="submit"
+            onClick={() => {
+              navigate('/signUp');
+            }}
+          >
+            Go to SignUp
+          </button>
+        </div>
+        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       </form>
     </div>
   );

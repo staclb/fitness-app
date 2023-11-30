@@ -6,12 +6,12 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  // messages for FE from backend
   const [errorMessage, setErrorMessage] = useState('');
 
   const navigate = useNavigate();
 
-  // fix any event typing
-  const handleLogin = async (event: any) => {
+  const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       const response = await signUp(username, password, email);
@@ -30,49 +30,54 @@ const SignUp = () => {
   return (
     <div className="flex justify-center items-center h-screen">
       <form onSubmit={handleLogin}>
-        <div>
-          <label className="text-red-500">Username:</label>
+        <div className="pb-2">
           <input
-            className="text-red-500"
+            className="rounded"
+            placeholder="Username"
             type="text"
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label className="text-red-500">Email:</label>
+        <div className="pb-2">
           <input
-            className="text-red-500"
+            className="rounded"
+            placeholder="Email"
             type="text"
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
         </div>
-        <div>
-          <label className="text-red-500">Password:</label>
+        <div className="pb-2">
           <input
-            className="text-red-500"
-            type="text"
+            className="rounded"
+            placeholder="Password"
+            type="password"
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
         </div>
-        <button className="text-red-500" type="submit">
-          <i className="material-icons text-[20px] text-red-500">save</i>
-        </button>
-        <button
-          className="text-red-500"
-          type="submit"
-          onClick={() => {
-            navigate('/');
-          }}
-        >
-          Login
-        </button>
-        {errorMessage && <p>{errorMessage}</p>}
+        <div className="flex justify-around">
+          <button className="text-red-500" type="submit">
+            <i className="material-icons text-[20px] text-red-500">save</i>
+          </button>
+          <button
+            className="text-red-500"
+            type="submit"
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            Go to Login
+          </button>
+        </div>
+        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       </form>
     </div>
   );

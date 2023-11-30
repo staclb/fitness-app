@@ -1,5 +1,5 @@
 import express from 'express';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 import authController from '../controllers/authController';
 
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 router.post(
   '/signup',
   authController.userSignup,
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response) => {
     res.status(200).json({ message: 'success' });
   },
 );
@@ -15,7 +15,7 @@ router.post(
 router.post(
   '/login',
   authController.userLogin,
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response) => {
     res.status(200).json({ message: 'success', token: res.locals.token });
   },
 );
@@ -23,7 +23,7 @@ router.post(
 router.post(
   '/auth',
   authController.verifyToken,
-  (req: Request, res: Response, next: NextFunction) => {
+  (req: Request, res: Response) => {
     res.status(200).json({ message: 'success' });
   },
 );

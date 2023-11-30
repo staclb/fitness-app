@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import secret from '../config/secrets';
@@ -53,6 +53,7 @@ const authController = {
   },
   userLogin: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('hi ape')
       const { username, password } = req.body;
       const checkUserQuery = `
         SELECT * 
@@ -66,8 +67,10 @@ const authController = {
       }
 
       const user = userResult.rows[0];
+      console.log('here before pw check')
       const passwordCheck = await bcrypt.compare(password, user.password);
       if (!passwordCheck) {
+        console.log(passwordCheck)
         return res.status(400).json({ error: 'Incorrect password' });
       }
 
@@ -97,7 +100,7 @@ const authController = {
       if (!token) {
         return res
           .status(400)
-          .json({ error: 'No token, authoraization denied' });
+          .json({ error: 'No token, authorization denied' });
       }
 
       const decodedToken = jwt.verify(token, JWT_SECRET);
