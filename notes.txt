@@ -29,3 +29,16 @@
 // show the 10 names, then user clicks 'see more', send query to backend again with offset increased
 // instructions for workouts??
 
+// slow load when new account is made?
+
+// slow load on first user request to API for a new workout?
+
+// columns for reps and columns on sets areent aligned
+  // line them up based on the verticality? so might need new state for each one 
+
+
+// logger => Winston, Bunyan, or external services like Loggly, Splunk, or ELK stack (Elasticsearch, Logstash, Kibana).
+
+
+// validate types here and on other functions/controllers?
+
