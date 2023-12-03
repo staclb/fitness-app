@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
 
 const exerciseController = {
   searchExercise: async (req: Request, res: Response, next: NextFunction) => {

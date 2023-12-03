@@ -1,10 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import secret from '../config/secrets';
+// import secret from '../config/secrets';
 import { query } from '../config/pgSetup';
 
-const { JWT_SECRET } = secret;
+// const { JWT_SECRET } = secret;
+const { JWT_SECRET } = process.env;
 
 const authController = {
   userSignup: async (req: Request, res: Response, next: NextFunction) => {
@@ -53,7 +54,6 @@ const authController = {
   },
   userLogin: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('hi ape')
       const { username, password } = req.body;
       const checkUserQuery = `
         SELECT * 
@@ -67,10 +67,10 @@ const authController = {
       }
 
       const user = userResult.rows[0];
-      console.log('here before pw check')
+      console.log('here before pw check');
       const passwordCheck = await bcrypt.compare(password, user.password);
       if (!passwordCheck) {
-        console.log(passwordCheck)
+        console.log(passwordCheck);
         return res.status(400).json({ error: 'Incorrect password' });
       }
 
@@ -78,13 +78,14 @@ const authController = {
         {
           userId: user.id,
         },
-        JWT_SECRET,
+        JWT_SECRET as string,
         {
           expiresIn: '24h',
         },
       );
 
       res.locals.token = token;
+      console.log(token);
       return next();
     } catch (error) {
       return next({
@@ -95,6 +96,7 @@ const authController = {
     }
   },
   verifyToken: async (req: Request, res: Response, next: NextFunction) => {
+    console.log('hi from verify during test');
     try {
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
@@ -103,7 +105,7 @@ const authController = {
           .json({ error: 'No token, authorization denied' });
       }
 
-      const decodedToken = jwt.verify(token, JWT_SECRET);
+      const decodedToken = jwt.verify(token, JWT_SECRET as string);
 
       res.locals.decodedToken = decodedToken;
       return next();
