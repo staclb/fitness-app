@@ -102,7 +102,7 @@ const authController = {
       if (!token) {
         return res
           .status(400)
-          .json({ error: 'No token, authorization denied' });
+          .json({ error: 'No token, authorization denied.' });
       }
 
       const decodedToken = jwt.verify(token, JWT_SECRET as string);
@@ -113,7 +113,7 @@ const authController = {
       return next({
         log: `Error in authController.verifyToken, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { error: 'Authentication failed, check credentials.' },
       });
     }
   },

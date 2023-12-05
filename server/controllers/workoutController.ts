@@ -59,7 +59,9 @@ const workoutController = {
       return next({
         log: `Error in workoutController.postWorkout, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: {
+          err: 'Failed to post workout, please verify the provided data.',
+        },
       });
     }
   },

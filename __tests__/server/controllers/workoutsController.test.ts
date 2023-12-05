@@ -13,9 +13,9 @@
 // const postData = { name: as, weight: as, reps: as, unixtime: as };
 // jest.mock('../../../server/config/pgSetup');
 
-describe('postWorkout Controller', () => {
-  it('should insert a workout and set if none exists', async () => {});
-  it('should insert a set if workout exists', async () => {});
-  it('handles database query failures', async () => {});
-  it('handles invalid input data', async () => {});
-});
+// describe('postWorkout Controller', () => {
+//   it('should insert a workout and set if none exists', async () => {});
+//   it('should insert a set if workout exists', async () => {});
+//   it('handles database query failures', async () => {});
+//   it('handles invalid input data', async () => {});
+// });
