@@ -8,12 +8,13 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import authCheck from './containers/authCheck';
 import Search from './components/Search';
+import Success from './components/Success';
 
 // setup from docs
 function App(): ReactElement {
   // React Node assignment error => React Component vs React Element
   // Comps => Workouts, Progress vs <Workouts/>
-  // the fucntion that describes vs teh actual object the component returns
+  // the fucntion that describes vs the actual object the component returns
   const AuthCheckedWorkouts = authCheck(Workouts);
   const AuthCheckedProgress = authCheck(Progress);
   const location = useLocation();
@@ -31,6 +32,7 @@ function App(): ReactElement {
           <Route path="/" element={<Login />} />
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/success" element={<Success />} />
         </Routes>
       </div>
       {showNavBar && <NavBar />}

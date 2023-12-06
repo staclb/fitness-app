@@ -12,4 +12,12 @@ router.get(
   },
 );
 
+router.get(
+  '/shorts',
+  exerciseController.ytShorts,
+  (req: Request, res: Response) => {
+    res.status(200).json({ message: 'success' });
+  },
+);
+
 export default router;

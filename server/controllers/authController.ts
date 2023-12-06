@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-// import secret from '../config/secrets';
+import { google } from 'googleapis';
 import { query } from '../config/pgSetup';
 
 // const { JWT_SECRET } = secret;
@@ -96,7 +96,6 @@ const authController = {
     }
   },
   verifyToken: async (req: Request, res: Response, next: NextFunction) => {
-    console.log('hi from verify during test');
     try {
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
@@ -114,6 +113,52 @@ const authController = {
         log: `Error in authController.verifyToken, ${error}`,
         status: 400,
         message: { error: 'Authentication failed, check credentials.' },
+      });
+    }
+  },
+  youtubeAuth: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const oauth2Client = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        'http://localhost:3000/auth/youtube/callback', // Redirect URI
+      );
+
+      // Generate the authentication URL
+      const scopes = ['https://www.googleapis.com/auth/youtube.readonly']; // Add additional scopes if needed
+      const url = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: scopes,
+      });
+
+      // Redirect the user to the authentication URL
+      return res.redirect(url);
+    } catch (error) {
+      return next({
+        log: `Error in authController.youtubeAuth, ${error}`,
+        status: 400,
+        message: { error: 'Youtube authentication failed, check credentials.' },
+      });
+    }
+  },
+  youtubeCallback: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const oauth2Client = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        'http://localhost:3000/auth/youtube/callback', // Redirect URI
+      );
+      const { tokens } = await oauth2Client.getToken(req.query.code as string);
+      oauth2Client.setCredentials(tokens);
+      //
+      // Store the tokens in the database associated with the user
+      // Add an expiratin timer?
+      return res.redirect('/success');
+    } catch (error) {
+      return next({
+        log: `Error in authController.youtubeCallback: ${error}`,
+        status: 400,
+        message: { error: 'Error retrieving access token.' },
       });
     }
   },
