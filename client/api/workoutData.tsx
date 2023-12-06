@@ -20,7 +20,7 @@ export const fetchWorkoutsByDay = async (
 // fix data and typing => any
 export const postWorkout = async (data: any, token: string | null) => {
   try {
-    const response = await fetch('/api/workout/post', {
+    const response = await fetch('/api/workout/add', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

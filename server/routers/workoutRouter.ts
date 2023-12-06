@@ -6,7 +6,7 @@ import authController from '../controllers/authController';
 const router = express.Router();
 
 router.post(
-  '/post',
+  '/add',
   authController.verifyToken,
   workoutController.postWorkout,
   (req: Request, res: Response) => {

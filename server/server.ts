@@ -3,10 +3,10 @@ import type { Request, Response, NextFunction } from 'express';
 import type { ServerError } from '../types/types';
 import apiRouter from './routers/apiRouter';
 
-const PORT = 3000;
-
 const app = express();
 app.use(express.json());
+
+const { PORT } = process.env;
 
 // general endpoint for routes
 app.use('/api', apiRouter);
@@ -24,6 +24,7 @@ app.use((err: ServerError, req: Request, res: Response, next: NextFunction) => {
     message: { err: 'An error occurred' },
   };
   const errorObj = { ...defaultErr, ...err };
+  // TODO: add logger for logs if deployed
   console.log(errorObj.log);
   console.log(err);
   return res.status(errorObj.status).json(errorObj.message);

@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+// dotenv.config();
 
 const exerciseController = {
   searchExercise: async (req: Request, res: Response, next: NextFunction) => {
@@ -53,7 +53,7 @@ const exerciseController = {
       return next({
         log: `Error in testController.apeCheck, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Searching for exercise failed.' },
       });
     }
   },

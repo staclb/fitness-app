@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction, RequestHandler } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { query } from '../config/pgSetup';
 
 const workoutController = {
@@ -6,7 +6,7 @@ const workoutController = {
     try {
       const { name, weight, reps, unixtime } = req.body;
       const { userId } = res.locals.decodedToken;
-      // console.log(userId)
+      // console.log(typeof name, typeof weight, typeof reps, typeof unixtime);
       // rep code from postWorkout function => might need to import from anotehr file
       const workoutDate = new Date(unixtime);
 
@@ -17,7 +17,7 @@ const workoutController = {
       const endOfDay = new Date(workoutDate);
       endOfDay.setHours(23, 59, 59, 999);
       const endOfDayUnixtime = endOfDay.getTime();
-      //
+
       const checkExerciseQuery = `
         SELECT exercise_id
         FROM exercises
@@ -38,14 +38,11 @@ const workoutController = {
           RETURNING exercise_id;
         `;
         const exerciseValues = [userId, name, unixtime];
-        // console.log('exerciseValues', exerciseValues)
         const insertWorkoutResult = await query(
           insertExerciseQuery,
           exerciseValues,
         );
-        // console.log('insertWorkoutResult', insertWorkoutResult)
         result = insertWorkoutResult.rows[0].exercise_id;
-        // console.log('result', result)
       }
 
       const insertSetQuery = `
@@ -54,24 +51,23 @@ const workoutController = {
           RETURNING set_id;
         `;
       const setValues = [result, reps, weight];
-      // console.log('setValues', setValues)
       const setId = await query(insertSetQuery, setValues);
-      // console.log('setId: ', setId.rows[0].set_id)
-      res.locals.setId = setId.rows[0].set_id
+
+      res.locals.setId = setId.rows[0].set_id;
       return next();
     } catch (error) {
       return next({
         log: `Error in workoutController.postWorkout, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: {
+          err: 'Failed to post workout, please verify the provided data.',
+        },
       });
     }
   },
   getWorkoutsByDay: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { unixtime } = req.query;
-      // user selects a day => change to unix time, select all exercises that fall under that day by unix  time in table
-      // attach the exerciseName to the sets that have a matching exerciseId; each set has a reps and weight
       // need unix time from start and end of the day that FE sends
       const { userId } = res.locals.decodedToken;
       // date obj needs an explicit type => number
@@ -126,44 +122,33 @@ const workoutController = {
       return next({
         log: `Error in workoutController.getWorkoutsByDay, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to retrieve workouts.' },
       });
     }
   },
   deleteWorkout: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { exerciseId } = req.params;
-      // first check if the entry in the exercises table for the exercise id has entries in the sets table
-      // if it does then delete all sets table entries for that id
-      // if not, or after deleting all sets table entries then delete the exercise table entry under the id
-      const setsQuery = `
-        SELECT * 
-        FROM sets
-        WHERE exercise_id = $1
-      `;
-      // query function requires the values to be in an array
-      const setQueryValues = [exerciseId];
-      const { rows } = await query(setsQuery, setQueryValues);
-      if (rows.length > 0) {
-        const deleteSetsQuery = `
+
+      const deleteSetsQuery = `
           DELETE FROM sets
           WHERE exercise_id = $1
         `;
-        await query(deleteSetsQuery, setQueryValues);
-      }
+      // query function requires the values to be in an array
+      await query(deleteSetsQuery, [exerciseId]);
 
       const deleteExerciseQuery = `
         DELETE FROM exercises
         WHERE exercise_id = $1
       `;
-      await query(deleteExerciseQuery, setQueryValues);
+      await query(deleteExerciseQuery, [exerciseId]);
 
       return next();
     } catch (error) {
       return next({
         log: `Error in workoutController.deleteWorkout, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to delete workout.' },
       });
     }
   },
@@ -183,7 +168,7 @@ const workoutController = {
       return next({
         log: `Error in workoutController.deleteSet, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to delete a set.' },
       });
     }
   },
@@ -205,7 +190,7 @@ const workoutController = {
       return next({
         log: `Error in workoutController.updateSet, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to update a set.' },
       });
     }
   },
