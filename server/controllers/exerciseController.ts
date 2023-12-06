@@ -53,7 +53,7 @@ const exerciseController = {
       return next({
         log: `Error in testController.apeCheck, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Searching for exercise failed.' },
       });
     }
   },

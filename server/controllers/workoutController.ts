@@ -122,7 +122,7 @@ const workoutController = {
       return next({
         log: `Error in workoutController.getWorkoutsByDay, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to retrieve workouts.' },
       });
     }
   },
@@ -148,7 +148,7 @@ const workoutController = {
       return next({
         log: `Error in workoutController.deleteWorkout, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to delete workout.' },
       });
     }
   },
@@ -168,7 +168,7 @@ const workoutController = {
       return next({
         log: `Error in workoutController.deleteSet, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to delete a set.' },
       });
     }
   },
@@ -190,7 +190,7 @@ const workoutController = {
       return next({
         log: `Error in workoutController.updateSet, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Failed to update a set.' },
       });
     }
   },

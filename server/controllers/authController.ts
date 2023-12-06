@@ -48,7 +48,7 @@ const authController = {
       return next({
         log: `Error in authController.userSignup, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Signup failed.' },
       });
     }
   },
@@ -91,7 +91,7 @@ const authController = {
       return next({
         log: `Error in authController.Login, ${error}`,
         status: 400,
-        message: { err: 'An error occurred' },
+        message: { err: 'Login failure.' },
       });
     }
   },
