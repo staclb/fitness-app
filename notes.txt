@@ -39,3 +39,11 @@
 
 // validate types here and on other functions/controllers?
 
+// initial load time slow => prob wont matter
+
+// depricate success and youtube comp?
+
+// command used in terminal to generate a token - openssl rand -hex 32
+
+// login/signup fields shoudl have something no blanks
+

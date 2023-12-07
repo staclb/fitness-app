@@ -1,16 +1,15 @@
-export const youtubeAuth = async () => {
+export const youtubeAuth = async (token: string | null) => {
   try {
-    console.log('hi fro teh api layer');
     const response = await fetch('/api/auth/youtube', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
-      // body: JSON.stringify({ username, password }),
     });
-    const data = response.json();
-    return data;
-    // window.location.href = 'http://localhost:3000/api/auth/youtube';
+    const data = await response.json();
+    // return data;
+    window.location.href = data.url;
   } catch (error) {
     console.log(`Error in youtubeAuth api layer, ${error}`);
     return null;

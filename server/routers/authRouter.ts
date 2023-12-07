@@ -28,7 +28,7 @@ router.post(
   },
 );
 
-router.post('/youtube', authController.youtubeAuth);
+router.post('/youtube', authController.verifyToken, authController.youtubeAuth);
 
 router.get('/youtube/callback', authController.youtubeCallback);
 

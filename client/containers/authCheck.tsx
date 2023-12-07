@@ -5,9 +5,10 @@ import { JwtPayload, jwtDecode } from 'jwt-decode';
 import { useAuthStore } from '../zustand';
 
 const authCheck = (WrappedComponent: ComponentType) => {
-  return (): React.ReactElement => {
+  return () => {
     const navigate = useNavigate();
     const { token, setToken } = useAuthStore();
+    console.log('token in authCheck', token);
 
     useEffect(() => {
       if (token) {

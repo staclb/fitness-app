@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { google } from 'googleapis';
 import { query } from '../config/pgSetup';
+import { encrypt, decrypt } from '../utils/encryption';
 
 // const { JWT_SECRET } = secret;
 const { JWT_SECRET } = process.env;
@@ -67,7 +68,6 @@ const authController = {
       }
 
       const user = userResult.rows[0];
-      console.log('here before pw check');
       const passwordCheck = await bcrypt.compare(password, user.password);
       if (!passwordCheck) {
         console.log(passwordCheck);
@@ -85,7 +85,6 @@ const authController = {
       );
 
       res.locals.token = token;
-      console.log(token);
       return next();
     } catch (error) {
       return next({
@@ -98,6 +97,7 @@ const authController = {
   verifyToken: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
+      console.log('token:', token);
       if (!token) {
         return res
           .status(400)
@@ -118,21 +118,28 @@ const authController = {
   },
   youtubeAuth: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('hi from youtubeAuth');
+      // console.log('res.locals.decodedToken: ', res.locals.decodedToken);
       const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        'http://localhost:3000/auth/youtube/callback', // Redirect URI
+        'http://localhost:3000/api/auth/youtube/callback', // Redirect URI
       );
+      const { userId } = res.locals.decodedToken;
+      console.log(userId);
 
       // Generate the authentication URL
+      // need to pass userId to state bc its lost in OAuth flow
+      const state = encrypt(userId.toString());
       const scopes = ['https://www.googleapis.com/auth/youtube.readonly']; // Add additional scopes if needed
       const url = oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: scopes,
+        state,
       });
 
       // Redirect the user to the authentication URL
-      return res.redirect(url);
+      return res.json({ url });
     } catch (error) {
       return next({
         log: `Error in authController.youtubeAuth, ${error}`,
@@ -143,17 +150,37 @@ const authController = {
   },
   youtubeCallback: async (req: Request, res: Response, next: NextFunction) => {
     try {
+      console.log('hi from ytCB');
       const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
-        'http://localhost:3000/auth/youtube/callback', // Redirect URI
+        'http://localhost:3000/api/auth/youtube/callback', // Redirect URI
       );
+      console.log('hi from before token extract');
       const { tokens } = await oauth2Client.getToken(req.query.code as string);
+      console.log('tokens: ', tokens, typeof tokens.access_token);
+
+      const insertTokenQuery = `
+        INSERT INTO youtube_tokens (user_id, encrypted_youtube_token)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id)
+        DO UPDATE SET encrypted_youtube_token = EXCLUDED.encrypted_youtube_token;
+      `;
+      // const { userId } = res.locals.decodedToken;
+      // console.log('res.locals.decodedToken: ', res.locals.decodedToken);
+      const { state } = req.query;
+      const userId = decrypt(state as string);
+
+      console.log('userId after decrypt: ', userId);
+
+      const encryptedToken = encrypt(tokens.access_token as string);
+      await query(insertTokenQuery, [userId, encryptedToken]);
       oauth2Client.setCredentials(tokens);
       //
       // Store the tokens in the database associated with the user
       // Add an expiratin timer?
-      return res.redirect('/success');
+      console.log('hi from after yt auth');
+      return res.redirect('http://localhost:8080/workouts');
     } catch (error) {
       return next({
         log: `Error in authController.youtubeCallback: ${error}`,

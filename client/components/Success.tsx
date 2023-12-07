@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router';
 const Success = () => {
   const navigate = useNavigate();
   const handleSuccess = () => {
-    // console.log('hi');
     navigate('/workouts');
   };
   return (

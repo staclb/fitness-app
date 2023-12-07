@@ -1,0 +1,5 @@
+CREATE TABLE youtube_tokens (
+  user_id INT PRIMARY KEY,
+  encrypted_youtube_token VARCHAR(1024),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);

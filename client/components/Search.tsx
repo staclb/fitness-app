@@ -24,11 +24,8 @@ const Search = () => {
     event: React.FormEvent<HTMLFormElement>,
   ) => {
     event.preventDefault();
-    // console.log('name: ', name);
-    // console.log(name)
     try {
       const response = await fetchExerices(exerciseName, token);
-      // console.log('response: ', response.exercises);
       if (response) {
         setExercises(response.exercises);
       }
@@ -38,8 +35,6 @@ const Search = () => {
   };
 
   const handlePostWorkout = async (exerciseName: string) => {
-    // console.log('hi');
-    // console.log(name)
     const { selectedDate } = location.state;
     const unixtime = selectedDate.getTime();
 
@@ -53,7 +48,6 @@ const Search = () => {
       const response = await postWorkout(workoutData, token);
       await refreshWorkouts(unixtime, token);
       // have to add selected  exercise and open the set edit modal on that set, so possibly the set id
-      // console.log('res in handle post workout in search: ', response);
       // setEditingSetId(response)
       navigate('/workouts', {
         state: { newSetId: response, exerciseName },
