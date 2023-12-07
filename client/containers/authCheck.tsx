@@ -4,11 +4,12 @@ import { JwtPayload, jwtDecode } from 'jwt-decode';
 // import { WrappedComponent } from '../../types/types';
 import { useAuthStore } from '../zustand';
 
-const authCheck = (WrappedComponent: ComponentType) => {
-  return () => {
+const authCheck = (WrappedComponent: any) => {
+  const WithAuthCheck = () => {
     const navigate = useNavigate();
     const { token, setToken } = useAuthStore();
     console.log('token in authCheck', token);
+    console.log('hiiiiiiiiiiiiiiiiiiiiiii');
 
     useEffect(() => {
       if (token) {
@@ -29,11 +30,22 @@ const authCheck = (WrappedComponent: ComponentType) => {
         // No token found
         navigate('/');
       }
-    }, [token, navigate, setToken]);
+    }, [navigate, setToken]);
 
-    // Return the wrapped component
     return <WrappedComponent />;
   };
+
+  // Setting the display name for debugging purposes
+  WithAuthCheck.displayName = `WithAuthCheck(${getDisplayName(
+    WrappedComponent,
+  )})`;
+
+  return WithAuthCheck;
 };
+
+// Helper function to get a component's display name
+function getDisplayName(WrappedComponent: any) {
+  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
 
 export default authCheck;

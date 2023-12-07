@@ -47,3 +47,7 @@
 
 // login/signup fields shoudl have something no blanks
 
+// Zustand's state is not persistent across page reloads or closing the browser.
+
+// consider https options when deploying => free on heroku
+

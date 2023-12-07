@@ -4,7 +4,6 @@ const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY as string;
 const IV_LENGTH = 16;
 
 export const encrypt = (text: string) => {
-  console.log('userid in encrypt', text);
   const iv = crypto.randomBytes(IV_LENGTH);
   const cipher = crypto.createCipheriv(
     'aes-256-cbc',
