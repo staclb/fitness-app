@@ -32,7 +32,7 @@ function Workouts() {
   const [workoutToDelete, setWorkoutToDelete] = useState<number | null>(null);
 
   const [openYoutubeModal, setOpenYoutubeModal] = useState(false);
-  const [youtubeVideoId, setYoutubeVideoId] = useState(null);
+  const [youtubeVideoIds, setYoutubeVideoIds] = useState([]);
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
   const { token } = useAuthStore();
@@ -145,7 +145,7 @@ function Workouts() {
     const response = await youtubeShorts(exercise, token);
     // const response = await youtubeShorts(exercise, token);
     if (response) {
-      setYoutubeVideoId(response);
+      setYoutubeVideoIds(response);
       setOpenYoutubeModal(true);
     }
   };
@@ -318,7 +318,7 @@ function Workouts() {
       )}
       {openYoutubeModal && (
         <YoutubeModal
-          videoId={youtubeVideoId}
+          videoIds={youtubeVideoIds}
           onClose={() => setOpenYoutubeModal(false)}
         />
       )}

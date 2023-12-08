@@ -8,8 +8,8 @@ export const youtubeAuth = async (token: string | null) => {
       },
     });
     const data = await response.json();
-    // return data;
     window.location.href = data.url;
+    return null;
   } catch (error) {
     console.log(`Error in youtubeAuth api layer, ${error}`);
     return null;
@@ -25,7 +25,7 @@ export const youtubeShorts = async (exercise: string, token: string | null) => {
       },
     });
     const data = await response.json();
-    return data.id.videoId;
+    return data;
   } catch (error) {
     console.log(`Error logging in youtubeShorts, ${error}`);
     return null;

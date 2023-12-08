@@ -66,6 +66,7 @@ const exerciseController = {
       const oauth2Client = new google.auth.OAuth2();
       oauth2Client.setCredentials({ access_token: decryptedToken });
 
+      // fix typing on client => 'part' param was giving trouble
       const youtube = google.youtube({
         version: 'v3',
         auth: oauth2Client,
@@ -75,18 +76,22 @@ const exerciseController = {
       const response = await youtube.search.list({
         part: 'snippet',
         q: `${exercise} workout short`,
-        maxResults: 1,
+        maxResults: 5,
         type: 'video',
       });
 
       const videos = response.data.items;
-      if (videos.length > 0) {
+      // extract videoIds from each object in array of videos
+      // fix videoobject typing here
+      const videoIds = videos.map((videoObject: any) => {
+        return videoObject.id.videoId;
+      });
+      if (videoIds.length > 0) {
         // Send the video data
-        res.json(videos[0]);
-      } else {
-        // No videos found
-        res.status(404).json({ message: 'No videos found' });
+        return res.json(videoIds);
       }
+      // No videos found
+      return res.status(404).json({ message: 'No videos found' });
     } catch (error) {
       return next({
         log: `Error in exerciseController.ytShorts, ${error}`,

@@ -42,8 +42,13 @@ export interface EditFormProps {
   handleDeleteSet: (setId: number) => Promise<void>;
 }
 
+export interface VideoIds {
+  videoId: string;
+}
+
 export interface YoutubeModalProps {
-  videoId: string | null;
+  // fix type => arr or undefined?
+  videoIds: VideoIds[];
   onClose: () => void;
 }
 

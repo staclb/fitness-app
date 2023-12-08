@@ -57,3 +57,7 @@
   // add console logs every where to check what part from clicking button => backend => naigate to workouts; takes longest
 
 // when the page is refreshed, likle while in 'workouts' the app goes back to login
+
+// shorts could take a second to load => not allow user to send multiple requests after the button is clicked once (other tasks could use this logic too)
+
+// test shorts with expired yt token, should be about an hour 
