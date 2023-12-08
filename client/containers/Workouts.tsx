@@ -12,6 +12,8 @@ import { useWorkoutStore, useAuthStore } from '../zustand';
 import ConfirmationModal from '../modals/ConfirmationModal';
 import EditForm from '../modals/EditForm';
 import { WorkoutSet } from '../../types/types';
+import { youtubeShorts } from '../api/youtubeData';
+import YoutubeModal from '../modals/YoutubeModal';
 
 // types for date, extended to array (range) if neccessary
 type ValuePiece = Date | null;
@@ -28,6 +30,9 @@ function Workouts() {
 
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [workoutToDelete, setWorkoutToDelete] = useState<number | null>(null);
+
+  const [openYoutubeModal, setOpenYoutubeModal] = useState(false);
+  const [youtubeVideoIds, setYoutubeVideoIds] = useState([]);
 
   const { workouts, refreshWorkouts } = useWorkoutStore();
   const { token } = useAuthStore();
@@ -136,6 +141,15 @@ function Workouts() {
     }
   };
 
+  const handleYoutubeShorts = async (exercise: string) => {
+    const response = await youtubeShorts(exercise, token);
+    // const response = await youtubeShorts(exercise, token);
+    if (response) {
+      setYoutubeVideoIds(response);
+      setOpenYoutubeModal(true);
+    }
+  };
+
   // for fetching workout data
   useEffect(() => {
     const fetchData = async () => {
@@ -191,6 +205,15 @@ function Workouts() {
                 type="button"
               >
                 {exercise}
+              </button>
+              <button
+                className="text-[30px] text-red-500 hover:underline hover:underline-offset-2 hover:text-red-600"
+                type="button"
+                onClick={() => handleYoutubeShorts(exercise)}
+              >
+                <i className="material-icons text-[30px] text-red-500 hover:bg-slate-900 rounded">
+                  play_arrow
+                </i>
               </button>
             </div>
             {selectedExercise === exercise && (
@@ -292,6 +315,12 @@ function Workouts() {
             }
           />
         </div>
+      )}
+      {openYoutubeModal && (
+        <YoutubeModal
+          videoIds={youtubeVideoIds}
+          onClose={() => setOpenYoutubeModal(false)}
+        />
       )}
     </div>
   );

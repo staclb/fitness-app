@@ -1,8 +1,9 @@
 import type { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-// import secret from '../config/secrets';
+import { google } from 'googleapis';
 import { query } from '../config/pgSetup';
+import { encrypt, decrypt } from '../utils/encryption';
 
 // const { JWT_SECRET } = secret;
 const { JWT_SECRET } = process.env;
@@ -67,7 +68,6 @@ const authController = {
       }
 
       const user = userResult.rows[0];
-      console.log('here before pw check');
       const passwordCheck = await bcrypt.compare(password, user.password);
       if (!passwordCheck) {
         console.log(passwordCheck);
@@ -85,7 +85,6 @@ const authController = {
       );
 
       res.locals.token = token;
-      console.log(token);
       return next();
     } catch (error) {
       return next({
@@ -96,7 +95,6 @@ const authController = {
     }
   },
   verifyToken: async (req: Request, res: Response, next: NextFunction) => {
-    console.log('hi from verify during test');
     try {
       const token = req.headers.authorization?.split(' ')[1];
       if (!token) {
@@ -108,12 +106,78 @@ const authController = {
       const decodedToken = jwt.verify(token, JWT_SECRET as string);
 
       res.locals.decodedToken = decodedToken;
+      res.locals.encodedToken = token; // for frontend after yt auth
       return next();
     } catch (error) {
       return next({
         log: `Error in authController.verifyToken, ${error}`,
         status: 400,
         message: { error: 'Authentication failed, check credentials.' },
+      });
+    }
+  },
+  youtubeAuth: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const oauth2Client = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        'http://localhost:3000/api/auth/youtube/callback', // Redirect URI
+      );
+      const { userId } = res.locals.decodedToken;
+      const token = res.locals.encodedToken;
+
+      // Generate the authentication URL
+      // need to pass userId to state bc its lost in OAuth flow
+      const state = encrypt(`${userId}:${token}`);
+      const scopes = ['https://www.googleapis.com/auth/youtube.readonly']; // Add additional scopes if needed
+      const url = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: scopes,
+        state,
+      });
+
+      // Redirect the user to the authentication URL
+      return res.json({ url });
+    } catch (error) {
+      return next({
+        log: `Error in authController.youtubeAuth, ${error}`,
+        status: 400,
+        message: { error: 'Youtube authentication failed, check credentials.' },
+      });
+    }
+  },
+  youtubeCallback: async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const oauth2Client = new google.auth.OAuth2(
+        process.env.GOOGLE_CLIENT_ID,
+        process.env.GOOGLE_CLIENT_SECRET,
+        'http://localhost:3000/api/auth/youtube/callback', // Redirect URI
+      );
+      const { tokens } = await oauth2Client.getToken(req.query.code as string);
+
+      const insertTokenQuery = `
+        INSERT INTO youtube_tokens (user_id, encrypted_youtube_token)
+        VALUES ($1, $2)
+        ON CONFLICT (user_id)
+        DO UPDATE SET encrypted_youtube_token = EXCLUDED.encrypted_youtube_token;
+      `;
+      // const { userId } = res.locals.decodedToken;
+      const { state } = req.query;
+      const [userId, token] = decrypt(state as string).split(':');
+
+      const encryptedToken = encrypt(tokens.access_token as string);
+      await query(insertTokenQuery, [userId, encryptedToken]);
+      oauth2Client.setCredentials(tokens);
+      //
+      // Store the tokens in the database associated with the user
+      // Add an expiratin timer?
+      // token from login is not retained
+      return res.redirect(`http://localhost:8080/success?token=${token}`);
+    } catch (error) {
+      return next({
+        log: `Error in authController.youtubeCallback: ${error}`,
+        status: 400,
+        message: { error: 'Error retrieving access token.' },
       });
     }
   },

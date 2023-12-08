@@ -15,9 +15,6 @@
 // debouncing for only searching when the suer is done typing => delay of a second maybe after the user is done typing, then search
 // caching recent user entered exercise => could just be the last XXX amount of exercises entered into teh db for that user
 // 
-// maybe add a feature when an excercse is hovered have an option for more info
-  // show an image , video of exercise, external like to youtube based on exercise selected
-    // prompt user with auth info or use for signing in the first place
 
 // bug - selected date when calendar modal is open is the color of the bg
   // also consider styling on this in general
@@ -42,3 +39,25 @@
 
 // validate types here and on other functions/controllers?
 
+// initial load time slow => prob wont matter
+
+// depricate success and youtube comp?
+
+// command used in terminal to generate a token - openssl rand -hex 32
+
+// login/signup fields shoudl have something no blanks
+
+// Zustand's state is not persistent across page reloads or closing the browser.
+
+// consider https options when deploying => free on heroku
+
+// check total number of packages => build time, update time etc ...
+
+// slow login intially, slower 
+  // add console logs every where to check what part from clicking button => backend => naigate to workouts; takes longest
+
+// when the page is refreshed, likle while in 'workouts' the app goes back to login
+
+// shorts could take a second to load => not allow user to send multiple requests after the button is clicked once (other tasks could use this logic too)
+
+// test shorts with expired yt token, should be about an hour 

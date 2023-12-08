@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 // import Logout from '../components/Logout';
 import ConfirmationModal from '../modals/ConfirmationModal';
+import { youtubeAuth } from '../api/youtubeData';
+import { useAuthStore } from '../zustand';
 
 const NavBar = () => {
+  const { token } = useAuthStore();
   const navigate = useNavigate();
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
@@ -16,8 +19,20 @@ const NavBar = () => {
     setIsLogoutModalOpen(false);
   };
 
+  const handleYoutubeAuth = async () => {
+    // add error handling
+    const response = await youtubeAuth(token);
+  };
+
   return (
     <div className="flex justify-around items-end bg-gray-500 text-white font-bold py-4 px-4 rounded sticky bottom-0 z-10">
+      <button
+        type="button"
+        className="material-icons text-[30px] hover:bg-gray-400 rounded"
+        onClick={handleYoutubeAuth}
+      >
+        play_circle
+      </button>
       <button
         type="button"
         className="material-icons text-[30px] hover:bg-gray-400 rounded"

@@ -12,7 +12,7 @@ export const fetchWorkoutsByDay = async (
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log('Error fetching workouts by day');
+    console.log(`Error fetching workouts by day, ${error}`);
     return null;
   }
 };
@@ -31,7 +31,7 @@ export const postWorkout = async (data: any, token: string | null) => {
     const setId = await response.json();
     return setId.setId;
   } catch (error) {
-    console.log('Error posting a workout');
+    console.log(`Error posting a workout, ${error}`);
     return null;
   }
 };
@@ -50,7 +50,7 @@ export const deleteWorkout = async (
     });
     return response.ok;
   } catch (error) {
-    console.log('Error deleting a workout');
+    console.log(`Error deleting a workout, ${error}`);
     return null;
   }
 };
@@ -66,7 +66,7 @@ export const deleteSet = async (setId: number, token: string | null) => {
     });
     return response.ok;
   } catch (error) {
-    console.log('Error deleting a set');
+    console.log(`Error deleting a set, ${error}`);
     return null;
   }
 };
@@ -87,7 +87,7 @@ export const updateSet = async (
     });
     return response.ok;
   } catch (error) {
-    console.log('Error updating workout');
+    console.log(`Error updating workout, ${error}`);
     return null;
   }
 };
@@ -105,7 +105,7 @@ export const login = async (username: string, password: string) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log('Error logging in');
+    console.log(`Error logging in, ${error}`);
     return null;
   }
 };
@@ -127,7 +127,7 @@ export const signUp = async (
     const data = await response.json();
     return data;
   } catch (error) {
-    console.log('Error logging in');
+    console.log(`Error logging in, ${error}`);
     return null;
   }
 };
@@ -154,10 +154,9 @@ export const fetchExerices = async (
       },
     );
     const data = await response.json();
-    // console.log(data)
     return data;
   } catch (error) {
-    console.log('Error fetching workouts by day');
+    console.log(`Error fetching workouts by day, ${error}`);
     return null;
   }
 };

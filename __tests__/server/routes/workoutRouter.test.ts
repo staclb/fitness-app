@@ -1,4 +1,5 @@
 import supertest from 'supertest';
+import type { Request, Response, NextFunction } from 'express';
 import app from '../../../server/server';
 import * as db from '../../../server/config/pgSetup';
 
@@ -7,7 +8,7 @@ jest.mock('../../../server/config/pgSetup', () => ({
 }));
 
 jest.mock('../../../server/controllers/authController', () => ({
-  verifyToken: (req, res, next) => {
+  verifyToken: (req: Request, res: Response, next: NextFunction) => {
     // to mock decoded token for userId
     res.locals.decodedToken = { userId: 'mockUserId' };
     next();

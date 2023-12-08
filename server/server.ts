@@ -1,9 +1,12 @@
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import type { ServerError } from '../types/types';
 import apiRouter from './routers/apiRouter';
 
 const app = express();
+
+app.use(cors());
 app.use(express.json());
 
 const { PORT } = process.env;
