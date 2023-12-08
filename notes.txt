@@ -51,3 +51,9 @@
 
 // consider https options when deploying => free on heroku
 
+// check total number of packages => build time, update time etc ...
+
+// slow login intially, slower 
+  // add console logs every where to check what part from clicking button => backend => naigate to workouts; takes longest
+
+// when the page is refreshed, likle while in 'workouts' the app goes back to login

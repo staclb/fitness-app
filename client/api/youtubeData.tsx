@@ -16,11 +16,18 @@ export const youtubeAuth = async (token: string | null) => {
   }
 };
 
-export const youtubeShorts = async () => {
+export const youtubeShorts = async (exercise: string, token: string | null) => {
   try {
-    console.log('hi');
+    const response = await fetch(`/api/exercise/shorts?exercise=${exercise}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await response.json();
+    return data.id.videoId;
   } catch (error) {
-    console.log('Error logging in');
+    console.log(`Error logging in youtubeShorts, ${error}`);
     return null;
   }
 };

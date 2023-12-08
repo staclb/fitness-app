@@ -8,8 +8,6 @@ const authCheck = (WrappedComponent: any) => {
   const WithAuthCheck = () => {
     const navigate = useNavigate();
     const { token, setToken } = useAuthStore();
-    console.log('token in authCheck', token);
-    console.log('hiiiiiiiiiiiiiiiiiiiiiii');
 
     useEffect(() => {
       if (token) {

@@ -25,6 +25,7 @@ export interface ConfirmationModalProps {
   isOpen: boolean;
   message: string;
 }
+
 export interface EditFormProps {
   workout: {
     setId: number;
@@ -41,12 +42,10 @@ export interface EditFormProps {
   handleDeleteSet: (setId: number) => Promise<void>;
 }
 
-// export interface Workout {
-//   setId: number;
-//   exerciseID: number;
-//   reps: string;
-//   weight: string;
-// }
+export interface YoutubeModalProps {
+  videoId: string | null;
+  onClose: () => void;
+}
 
 export interface WorkoutSet {
   reps: number;

@@ -97,7 +97,6 @@ const authController = {
   verifyToken: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const token = req.headers.authorization?.split(' ')[1];
-      // console.log('token:', token);
       if (!token) {
         return res
           .status(400)
@@ -119,18 +118,13 @@ const authController = {
   },
   youtubeAuth: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('hi from youtubeAuth');
-      // console.log('res.locals.decodedToken: ', res.locals.decodedToken);
       const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
         'http://localhost:3000/api/auth/youtube/callback', // Redirect URI
       );
       const { userId } = res.locals.decodedToken;
-      // console.log(userId);
       const token = res.locals.encodedToken;
-      console.log('token from yt auth:', token);
-      console.log('res.locals.encodedToken: ', res.locals.encodedToken);
 
       // Generate the authentication URL
       // need to pass userId to state bc its lost in OAuth flow
@@ -154,15 +148,12 @@ const authController = {
   },
   youtubeCallback: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log('hi from ytCB');
       const oauth2Client = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
         process.env.GOOGLE_CLIENT_SECRET,
         'http://localhost:3000/api/auth/youtube/callback', // Redirect URI
       );
-      // console.log('hi from before token extract');
       const { tokens } = await oauth2Client.getToken(req.query.code as string);
-      // console.log('tokens: ', tokens, typeof tokens.access_token);
 
       const insertTokenQuery = `
         INSERT INTO youtube_tokens (user_id, encrypted_youtube_token)
@@ -171,11 +162,8 @@ const authController = {
         DO UPDATE SET encrypted_youtube_token = EXCLUDED.encrypted_youtube_token;
       `;
       // const { userId } = res.locals.decodedToken;
-      // console.log('res.locals.decodedToken: ', res.locals.decodedToken);
       const { state } = req.query;
       const [userId, token] = decrypt(state as string).split(':');
-
-      // console.log('userId after decrypt: ', userId);
 
       const encryptedToken = encrypt(tokens.access_token as string);
       await query(insertTokenQuery, [userId, encryptedToken]);
@@ -183,9 +171,7 @@ const authController = {
       //
       // Store the tokens in the database associated with the user
       // Add an expiratin timer?
-      console.log('hi from after yt auth');
       // token from login is not retained
-      console.log('token from yt callback', token);
       return res.redirect(`http://localhost:8080/success?token=${token}`);
     } catch (error) {
       return next({
